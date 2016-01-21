@@ -1,5 +1,10 @@
-var confJson = require('../../config/configurations.json');
+var devJson = require('../../config/development-conf.json')
+    prodJson = require('../../config/production-conf.json');
 
 exports.send = function(req, res) {
-  res.send(confJson);
+  if (process.env.NODE_ENV === 'development') {
+    res.send(devJson);
+  } else {
+    res.send(prodJson);
+  }
 }
