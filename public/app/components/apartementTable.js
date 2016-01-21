@@ -1,3 +1,6 @@
+//const Paths = window.Paths;
+const Configurations = window.Configurations;
+
 var fakedata = [
   {
     Name: 'Hieno huvila hietaniemessä',
@@ -47,9 +50,24 @@ var ApartementRow = React.createClass({
 });
 
 var ApartementTable = React.createClass({
+  getInitialState: function() {
+    return {apartements: []};
+  },
+  componentDidMount: function() {
+    const state = this;
+    Configurations(function(conf) {
+      $.ajax({url: conf.endpoints.apartement,
+        success: function(res) {
+          state.setState({
+            apartements: res
+          });
+        }
+      });
+    });
+  },
   render: function() {
     var rows = [];
-    this.props.apartements.forEach(function(apartement) {
+    this.state.apartements.forEach(function(apartement) {
         if(apartement[this.props.filterParam].indexOf(this.props.filterText) === -1) {
             return;
         }

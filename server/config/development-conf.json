@@ -1,5 +1,5 @@
 {
 	"endpoints": {
-		"apartement": "localhost:3015/api/apartements"
+		"apartement": "http://localhost:3015/api/apartements"
 	}
 }
