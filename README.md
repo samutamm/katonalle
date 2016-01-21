@@ -3,7 +3,7 @@
 Yleisiä linkkejä:
 
 * [Linkki sovellukseeni](https://katonalle.herokuapp.com/)
-* [Linkki dokumentaatiooni](https://github.com/samutamm/katonalle/tree/master/doc/documentaatio.pdf)
+* [Linkki dokumentaatiooni](https://github.com/samutamm/katonalle/tree/master/doc/)
 
 ## Työn aihe
 
