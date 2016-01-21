@@ -1,0 +1,22 @@
+18.1.2016
+Sovelluksen tarkoitus on välittää vuokra-asuntoja. Järjestelmään voivat kirjautua asuntoja välittävän yrityksen työntekijät ja asiakkaat.
+Asiakkaat tarkastelevat tarjontaa ja tekevät sopimuksia. Työntekijät lisäävät asuntoja ja hallinnoivat sopimuksiin ja asiakastapaamisiin
+liittyvissä asioissa.
+
+Sovellus tulee pyörimään osittain laitoksen users-palvelimilla sekä osittain Herokussa tai Google App Enginessä.
+Sovelluksen arkkitehtuuri on osittain mikroarkkitehtuurin/SOA mukainen: yhden monoliittisen komponentin sijaan eri toiminnot
+pyörivät eri palvelin-instansseissa. Ainakin autentikaatio eriytetään omaksi palvelukseen.
+
+Palvelimet kirjoitetaan PHP:llä, selain käyttöliittymä JavaScriptillä(ReactJS).
+
+21.1.2016
+Toteutankin kaikki komponentit JavaScript-kielellä: Node.js/Express palvelin puolella ja
+React.js selaimessa. Laitan kaikki komponentit pyörimään Herokuun.
+
+Kohtasin laitoksen users-palvelimen ja PHP:n kanssa työskennellessä haasteita: PHP-kielessä
+ei ole sisäänrakennettua http-palvelinta, vaan se vaati esim Apachea avukseen. Frontend-koodia
+kirjoittaessani tarvitsen palvelimen, joka on helppo ajaa sekä lokaalisti, että tuotannossa.
+Apache edellyttää jonkinlaista konfigurointia.  Laitoksen users-palvelimilla on PHP:stä vanhempi
+versio, joten siellä pyörivä softa olisi kirjoitettava vanhemman Slim API:n mukaan.
+Siirryn mielummin mukavuusalueelleni ja keskityn fronttiin ja microservice-arkkitehtuuriin, joista
+olen kiinnostunut.
