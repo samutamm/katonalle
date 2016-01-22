@@ -1,16 +1,59 @@
 //const Paths = window.Paths;
 const Configurations = window.Configurations;
 
-var fakedata = [
-  {
-    Name: 'Hieno huvila hietaniemessä',
-    Address: 'Hietsu'
+var ParamButton = React.createClass({
+  getInitialState: function() {
+    return {clicked: this.props.clicked};
   },
-  {
-    Name: 'Kaamea koppi kalliossa',
-    Address: 'Kallio'
+  handleClick: function(event) {
+    this.props.handleChangedParam({
+      clicked: this.state.clicked,
+      id: this.props.paramName
+    });
   },
-];
+  render: function() {
+    var id = this.props.clicked ? 'selectedbutton' : '';
+    return (
+      <button onClick={this.handleClick}
+        id={id}
+      >
+        {this.props.paramName}
+      </button>
+    );
+  }
+});
+
+var FilterParam = React.createClass({
+  getInitialState: function() {
+    return {param: 'Name'};
+  },
+  handleChangedParam: function(change) {
+    this.setState({param: change.id});
+    this.props.paramChanges(
+      this.props.filterText,
+      change.id
+    );
+  },
+  render: function() {
+    var names = ['Name', 'Address'];
+    var buttons = [];
+    for(var i = 0; i < names.length; i++) {
+      var name = names[i];
+      var clicked = name === this.state.param;
+      buttons.push(<ParamButton
+        paramName={name}
+        clicked={clicked}
+        key={name}
+        handleChangedParam={this.handleChangedParam}
+      />);
+    }
+    return (
+      <div>
+        {buttons}
+      </div>
+    );
+  }
+});
 
 var FilterForm = React.createClass({
   handleChange: function() {
@@ -89,60 +132,6 @@ var ApartementTable = React.createClass({
   }
 });
 
-var ParamButton = React.createClass({
-  getInitialState: function() {
-    return {clicked: this.props.clicked};
-  },
-  handleClick: function(event) {
-    this.props.handleChangedParam({
-      clicked: this.state.clicked,
-      id: this.props.paramName
-    });
-  },
-  render: function() {
-    var id = this.props.clicked ? 'selectedbutton' : '';
-    return (
-      <button onClick={this.handleClick}
-        id={id}
-      >
-        {this.props.paramName}
-      </button>
-    );
-  }
-});
-
-var FilterParam = React.createClass({
-  getInitialState: function() {
-    return {param: 'Name'};
-  },
-  handleChangedParam: function(change) {
-    this.setState({param: change.id});
-    this.props.paramChanges(
-      this.props.filterText,
-      change.id
-    );
-  },
-  render: function() {
-    var names = ['Name', 'Address'];
-    var buttons = [];
-    for(var i = 0; i < names.length; i++) {
-      var name = names[i];
-      var clicked = name === this.state.param;
-      buttons.push(<ParamButton
-        paramName={name}
-        clicked={clicked}
-        key={name}
-        handleChangedParam={this.handleChangedParam}
-      />);
-    }
-    return (
-      <div>
-        {buttons}
-      </div>
-    );
-  }
-});
-
 var FilterableApartementTable = React.createClass({
   getInitialState: function() {
     return {
@@ -169,7 +158,6 @@ var FilterableApartementTable = React.createClass({
           filterText={this.state.filterText}
           filterParam={this.state.filterParam}
           onUserInput={this.handleUserInput}
-          apartements={this.props.apartements}
         />
       </div>
     );
@@ -177,6 +165,6 @@ var FilterableApartementTable = React.createClass({
 });
 
 ReactDOM.render(
-  <FilterableApartementTable apartements={fakedata} />,
+  <FilterableApartementTable />,
   document.getElementById('content')
 );
