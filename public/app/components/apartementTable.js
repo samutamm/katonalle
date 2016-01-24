@@ -1,5 +1,5 @@
-//const Paths = window.Paths;
-const Configurations = window.Configurations;
+import configurations from './Configurations';
+import React from 'react';
 
 var ParamButton = React.createClass({
   getInitialState: function() {
@@ -98,7 +98,7 @@ var ApartementTable = React.createClass({
   },
   componentDidMount: function() {
     const state = this;
-    Configurations(function(conf) {
+    configurations(function(conf) {
       $.ajax({url: conf.endpoints.apartement,
         success: function(res) {
           state.setState({
@@ -132,7 +132,7 @@ var ApartementTable = React.createClass({
   }
 });
 
-var FilterableApartementTable = React.createClass({
+export const FilterableApartementTable = React.createClass({
   getInitialState: function() {
     return {
         filterText: '',
@@ -163,8 +163,3 @@ var FilterableApartementTable = React.createClass({
     );
   }
 });
-
-ReactDOM.render(
-  <FilterableApartementTable />,
-  document.getElementById('content')
-);

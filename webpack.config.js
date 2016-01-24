@@ -1,13 +1,39 @@
-var path = require('path');
+var webpack = require('webpack');
 
-module.exports = {
-    entry: [
-      'webpack/hot/dev-server',
-      'webpack-dev-server/client?http://localhost:8080',
-      path.resolve(__dirname, 'public/app/main.js')
-    ],
-    output: {
-        path: path.resolve(__dirname, 'public/build'),
-        filename: 'bundle.js',
+function getEntrySources(sources) {
+    if (process.env.NODE_ENV !== 'production') {
+        sources.push('webpack-dev-server/client?http://localhost:8080');
+        sources.push('webpack/hot/only-dev-server');
     }
-};
+    return sources;
+}
+
+module.exports = function() {
+  return ({
+    entry: getEntrySources([
+      './public/app/index.jsx'
+    ]),
+    module: {
+      loaders: [{
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loader: 'react-hot!babel'
+      }]
+    },
+    resolve: {
+      extensions: ['', '.js', '.jsx']
+    },
+    output: {
+      path: __dirname + '/public/dist',
+      publicPath: '/',
+      filename: 'bundle.js'
+    },
+    devServer: {
+      contentBase: './public/',
+      hot: true
+    },
+    plugins: [
+      new webpack.HotModuleReplacementPlugin()
+    ]
+  });
+}();
