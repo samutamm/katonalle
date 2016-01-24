@@ -1,5 +1,7 @@
 import configurations from './Configurations';
 import React from 'react';
+import {connect} from 'react-redux';
+import * as actionCreators from '../action_creators';
 
 var ParamButton = React.createClass({
   getInitialState: function() {
@@ -93,24 +95,21 @@ var ApartementRow = React.createClass({
 });
 
 var ApartementTable = React.createClass({
-  getInitialState: function() {
-    return {apartements: []};
-  },
-  componentDidMount: function() {
-    const state = this;
-    configurations(function(conf) {
-      $.ajax({url: conf.endpoints.apartement,
-        success: function(res) {
-          state.setState({
-            apartements: res
-          });
-        }
-      });
-    });
+  getApartements: function() {
+    return this.props.fetchApartementsIfNeeded('http://localhost:3015/api/apartements');
   },
   render: function() {
     var rows = [];
-    this.state.apartements.forEach(function(apartement) {
+    var apartements = this.getApartements();
+    console.log('FETCHINH: ' + this.props.isFetching);
+    if(this.props.isFetching) {
+      return (
+        <div>
+          <p>Fetching</p>
+        </div>
+      );
+    }
+    apartements.forEach(function(apartement) {
         if(apartement[this.props.filterParam].indexOf(this.props.filterText) === -1) {
             return;
         }
@@ -158,8 +157,22 @@ export const FilterableApartementTable = React.createClass({
           filterText={this.state.filterText}
           filterParam={this.state.filterParam}
           onUserInput={this.handleUserInput}
+          {...this.props}
         />
       </div>
     );
   }
 });
+
+function mapStateToProps(state) {
+  return {
+    apartements: state.getIn('apartements'),
+    filtertext: state.get('filtertext'),
+    filterparam: state.get('filterparam')
+  };
+}
+
+export const ApartementsContainer = connect(
+  mapStateToProps,
+  actionCreators
+)(FilterableApartementTable);
