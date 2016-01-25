@@ -17,10 +17,10 @@ function requestApartements() {
   };
 }
 
-function receiveApartements(apartements) {
+function receiveApartements(json) {
   return {
     type: 'RECEIVE_APARTEMENTS',
-    apartements: apartements,
+    apartements: json,
     receivedAt: Date.now()
   };
 }

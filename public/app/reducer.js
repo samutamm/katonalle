@@ -5,24 +5,33 @@ function initial() {
   map = map.set('apartements', List());
   map = map.set('filtertext', '');
   map = map.set('filterparam', '');
+  map = map.set('isFetching', false);
   return map;
 }
 
 function setFetchingTag(state) {
-  return state.set('isFetching', true);
+  return Object.assign({}, state, {
+    isFetching: true
+  });
 }
 
 function setApartements(state, apartements) {
-  var newState = state.set('isFetching', false);
-  return newState.set('apartements', apartements);
+  return Object.assign({}, state, {
+    isFetching: false,
+    apartements: apartements
+  });
 }
 
 function setFilterText(state, filtertext) {
-  return state.set('filtertext', filtertext);
+  return Object.assign({}, state, {
+    filtertext: filtertext
+  });
 }
 
 function setFilterParam(state, filterparam) {
-  return state.set('filterparam', filterparam);
+  return Object.assign({}, state, {
+    filterparam: filterparam
+  });
 }
 
 export default function(state = initial(), action) {
