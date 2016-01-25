@@ -1,4 +1,6 @@
 import {ApartementsContainer} from './components/FilterableApartementTable';
+import {LoginContainer} from './components/LoginContainer';
+import Router, {Route} from 'react-router';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import thunkMiddleware from 'redux-thunk';
@@ -6,7 +8,9 @@ import createLogger from 'redux-logger';
 import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
 import reducer from './reducer';
+import App from './components/App';
 import {fetchApartementsIfNeeded, setFilterparam, setFiltertext} from './action_creators';
+import createHistory from 'history/lib/createHashHistory';
 
 const loggerMiddleware = createLogger()
 
@@ -21,9 +25,20 @@ store.dispatch(fetchApartementsIfNeeded('http://localhost:3015/api/apartements')
 store.dispatch(setFilterparam('Name'));
 store.dispatch(setFiltertext(''));
 
+const routes = <Route component={App}>
+  <Route path="/login" component={LoginContainer} />
+  <Route path="/" component={ApartementsContainer} />
+</Route>;
+
+var history = createHistory({
+  queryKey: false
+});
+
 ReactDOM.render(
   <Provider store={store}>
-    <ApartementsContainer />
+    <Router history={history}>
+      {routes}
+    </Router>
   </Provider>,
   document.getElementById('content')
 );

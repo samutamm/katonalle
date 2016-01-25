@@ -49,18 +49,6 @@ var ApartementTable = React.createClass({
 });
 
 export const FilterableApartementTable = React.createClass({
-  getInitialState: function() {
-    return {
-        filterText: '',
-        filterParam: 'Name'
-    };
-  },
-  handleUserInput: function(filterText, filterParam) {
-    this.setState({
-        filterText: filterText,
-        filterParam: filterParam
-    });
-  },
   render: function() {
     return (
       <div>
