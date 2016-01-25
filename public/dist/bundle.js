@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "1b1ced946dbebd91d8fe"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "573302c59f40bcf8b57c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -28051,7 +28051,7 @@
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'tr',
-	      null,
+	      { className: 'ApartementRow' },
 	      _react2.default.createElement(
 	        'td',
 	        null,
@@ -28073,7 +28073,7 @@
 	    if (this.props.isFetching) {
 	      return _react2.default.createElement(
 	        'div',
-	        null,
+	        { className: 'fetching' },
 	        _react2.default.createElement(
 	          'p',
 	          null,
@@ -28143,10 +28143,10 @@
 
 	function mapStateToProps(state) {
 	  return {
-	    apartements: state.apartements,
-	    filtertext: state.filtertext,
-	    filterparam: state.filterparam,
-	    isFetching: state.isFetching
+	    apartements: state.getIn(['apartements', 'items']),
+	    filtertext: state.getIn(['apartements', 'filtertext']),
+	    filterparam: state.getIn(['apartements', 'filterparam']),
+	    isFetching: state.getIn(['apartements', 'isFetching'])
 	  };
 	}
 
@@ -29488,13 +29488,15 @@
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
+	var _immutable = __webpack_require__(270);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function shouldFetchApartements(state) {
-	  var apartements = state.apartements;
-	  if (!apartements) {
+	  var apartements = state.get('apartements');
+	  if (!apartements.items) {
 	    return true;
-	  } else if (state.isFetching) {
+	  } else if (apartements.isFetching) {
 	    return false;
 	  } else {
 	    return state.didInvalidate;
@@ -29510,7 +29512,7 @@
 	function receiveApartements(json) {
 	  return {
 	    type: 'RECEIVE_APARTEMENTS',
-	    apartements: json,
+	    items: json,
 	    receivedAt: Date.now()
 	  };
 	}
@@ -29539,14 +29541,14 @@
 	function setFiltertext(text) {
 	  return {
 	    type: 'SET_FILTERTEXT',
-	    filtertext: text
+	    text: text
 	  };
 	}
 
 	function setFilterparam(param) {
 	  return {
 	    type: 'SET_FILTERPARAM',
-	    filterparam: param
+	    param: param
 	  };
 	}
 
@@ -35058,6 +35060,8 @@
 
 	var actionCreators = _interopRequireWildcard(_action_creators);
 
+	var _reactRouter = __webpack_require__(273);
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -35070,17 +35074,35 @@
 	      'form',
 	      null,
 	      _react2.default.createElement(
-	        'span',
+	        'h3',
 	        null,
-	        'Username'
+	        ' Log in: '
 	      ),
-	      _react2.default.createElement('input', null),
 	      _react2.default.createElement(
-	        'span',
+	        'ul',
 	        null,
-	        'Password'
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          'Username '
+	        ),
+	        _react2.default.createElement('input', null)
 	      ),
-	      _react2.default.createElement('input', null)
+	      _react2.default.createElement(
+	        'ul',
+	        null,
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          'Password '
+	        ),
+	        _react2.default.createElement('input', null)
+	      ),
+	      _react2.default.createElement(
+	        _reactRouter.Link,
+	        { to: '/register' },
+	        'or register as a client here'
+	      )
 	    );
 	  }
 	});
@@ -39746,11 +39768,11 @@
 	    case 'REQUEST_APARTEMENTS':
 	      return setFetchingTag(state);
 	    case 'RECEIVE_APARTEMENTS':
-	      return setApartements(state, action.apartements);
+	      return setApartements(state, action.items);
 	    case 'SET_FILTERTEXT':
-	      return setFilterText(state, action.filtertext);
+	      return setFilterText(state, action.text);
 	    case 'SET_FILTERPARAM':
-	      return setFilterParam(state, action.filterparam);
+	      return setFilterParam(state, action.param);
 	  }
 	  return state;
 	};
@@ -39758,37 +39780,31 @@
 	var _immutable = __webpack_require__(270);
 
 	function initial() {
-	  var map = (0, _immutable.Map)();
-	  map = map.set('apartements', (0, _immutable.List)());
-	  map = map.set('filtertext', '');
-	  map = map.set('filterparam', '');
-	  map = map.set('isFetching', false);
-	  return map;
+	  return (0, _immutable.Map)({
+	    apartements: (0, _immutable.Map)({
+	      items: (0, _immutable.List)(),
+	      filtertext: '',
+	      filterparam: 'Name',
+	      isFetching: false
+	    })
+	  });
 	}
 
 	function setFetchingTag(state) {
-	  return Object.assign({}, state, {
-	    isFetching: true
-	  });
+	  return state.setIn(['apartements', 'isFetching'], true);
 	}
 
-	function setApartements(state, apartements) {
-	  return Object.assign({}, state, {
-	    isFetching: false,
-	    apartements: apartements
-	  });
+	function setApartements(state, items) {
+	  var fetchingFinished = state.setIn(['apartements', 'isFetching'], false);
+	  return fetchingFinished.setIn(['apartements', 'items'], items);
 	}
 
-	function setFilterText(state, filtertext) {
-	  return Object.assign({}, state, {
-	    filtertext: filtertext
-	  });
+	function setFilterText(state, text) {
+	  return state.setIn(['apartements', 'filtertext'], text);
 	}
 
-	function setFilterParam(state, filterparam) {
-	  return Object.assign({}, state, {
-	    filterparam: filterparam
-	  });
+	function setFilterParam(state, param) {
+	  return state.setIn(['apartements', 'filterparam'], param);
 	}
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(246); if (makeExportsHot(module, __webpack_require__(139))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "reducer.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }

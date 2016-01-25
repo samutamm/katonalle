@@ -1,10 +1,11 @@
 import fetch from 'isomorphic-fetch';
+import {Map} from 'immutable';
 
 function shouldFetchApartements(state) {
-  const apartements = state.apartements;
-  if(!apartements) {
+  const apartements = state.get('apartements');
+  if(!apartements.items) {
     return true;
-  } else if(state.isFetching) {
+  } else if(apartements.isFetching) {
     return false;
   } else {
     return state.didInvalidate;
@@ -20,7 +21,7 @@ function requestApartements() {
 function receiveApartements(json) {
   return {
     type: 'RECEIVE_APARTEMENTS',
-    apartements: json,
+    items: json,
     receivedAt: Date.now()
   };
 }
@@ -47,13 +48,13 @@ export function fetchApartementsIfNeeded(api) {
 export function setFiltertext(text) {
   return {
     type: 'SET_FILTERTEXT',
-    filtertext: text
+    text: text
   };
 }
 
 export function setFilterparam(param) {
   return {
     type: 'SET_FILTERPARAM',
-    filterparam: param
+    param: param
   };
 }

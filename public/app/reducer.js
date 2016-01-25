@@ -1,37 +1,31 @@
 import {List, Map} from 'immutable';
 
 function initial() {
-  var map = Map()
-  map = map.set('apartements', List());
-  map = map.set('filtertext', '');
-  map = map.set('filterparam', '');
-  map = map.set('isFetching', false);
-  return map;
+  return Map({
+    apartements: Map({
+      items: List(),
+      filtertext: '',
+      filterparam: 'Name',
+      isFetching: false
+    })
+  });
 }
 
 function setFetchingTag(state) {
-  return Object.assign({}, state, {
-    isFetching: true
-  });
+  return state.setIn(['apartements', 'isFetching'], true);
 }
 
-function setApartements(state, apartements) {
-  return Object.assign({}, state, {
-    isFetching: false,
-    apartements: apartements
-  });
+function setApartements(state, items) {
+  const fetchingFinished = state.setIn(['apartements', 'isFetching'], false);
+  return fetchingFinished.setIn(['apartements', 'items'], items);
 }
 
-function setFilterText(state, filtertext) {
-  return Object.assign({}, state, {
-    filtertext: filtertext
-  });
+function setFilterText(state, text) {
+  return state.setIn(['apartements', 'filtertext'], text);
 }
 
-function setFilterParam(state, filterparam) {
-  return Object.assign({}, state, {
-    filterparam: filterparam
-  });
+function setFilterParam(state, param) {
+  return state.setIn(['apartements', 'filterparam'], param);
 }
 
 export default function(state = initial(), action) {
@@ -39,11 +33,11 @@ export default function(state = initial(), action) {
   case 'REQUEST_APARTEMENTS':
     return setFetchingTag(state);
   case 'RECEIVE_APARTEMENTS':
-    return setApartements(state, action.apartements);
+    return setApartements(state, action.items);
   case 'SET_FILTERTEXT':
-    return setFilterText(state, action.filtertext);
+    return setFilterText(state, action.text);
   case 'SET_FILTERPARAM':
-    return setFilterParam(state, action.filterparam);
+    return setFilterParam(state, action.param);
   }
   return state;
 }

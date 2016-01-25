@@ -66,10 +66,10 @@ export const FilterableApartementTable = React.createClass({
 
 function mapStateToProps(state) {
   return {
-    apartements: state.apartements,
-    filtertext: state.filtertext,
-    filterparam: state.filterparam,
-    isFetching: state.isFetching
+    apartements: state.getIn(['apartements', 'items']),
+    filtertext: state.getIn(['apartements', 'filtertext']),
+    filterparam: state.getIn(['apartements', 'filterparam']),
+    isFetching: state.getIn(['apartements', 'isFetching'])
   };
 }
 
