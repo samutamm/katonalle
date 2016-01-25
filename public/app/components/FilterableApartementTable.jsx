@@ -8,7 +8,7 @@ import FilterForm from './FilterForm';
 var ApartementRow = React.createClass({
   render: function() {
     return (
-      <tr>
+      <tr className="ApartementRow" >
         <td>{this.props.apartement.Name}</td>
         <td>{this.props.apartement.Address}</td>
       </tr>
@@ -20,7 +20,7 @@ var ApartementTable = React.createClass({
   render: function() {
     if(this.props.isFetching) {
       return (
-        <div>
+        <div className='fetching'>
           <p>Fetching</p>
         </div>
       );
