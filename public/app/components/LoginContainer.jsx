@@ -1,21 +1,28 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import * as actionCreators from '../action_creators';
+import * as actionCreators from '../creators/login_actions';
 import {Link} from 'react-router';
 
 export const LoginForm = React.createClass({
+  handleLogin: function() {
+    console.log(this.refs.username.value);
+    console.log(this.refs.password.value);
+  },
   render: function() {
     return (
       <form>
         <h3> Log in: </h3>
         <ul>
           <span>Username </span>
-          <input />
+          <input type="text"
+                 ref="username" />
         </ul>
         <ul>
           <span>Password </span>
-          <input />
+          <input type="text"
+                 ref="password" />
         </ul>
+        <button onClick={this.handleLogin}>Log in</button>
         <Link to={'/register'}>or register as a client here</Link>
       </form>
     );
@@ -24,7 +31,9 @@ export const LoginForm = React.createClass({
 
 function mapStateToProps(state) {
   return {
-    apartements: state.apartements
+    message: state.loginReducer.getIn(['session', 'message']),
+    isChecking: state.loginReducer.getIn(['session', 'isChecking']),
+    token: state.loginReducer.getIn(['session', 'token'])
   };
 }
 

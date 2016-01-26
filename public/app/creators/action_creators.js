@@ -37,7 +37,7 @@ function fetchApartements(api) {
 
 export function fetchApartementsIfNeeded(api) {
   return (dispatch, getState) => {
-    if (shouldFetchApartements(getState())) {
+    if (shouldFetchApartements(getState().apartementReducer)) {
       return dispatch(fetchApartements(api))
     } else {
       return Promise.resolve()

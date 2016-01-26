@@ -1,7 +1,7 @@
 import configurations from './Configurations';
 import React from 'react';
 import {connect} from 'react-redux';
-import * as actionCreators from '../action_creators';
+import * as actionCreators from '../creators/action_creators';
 import {Map} from 'immutable';
 import FilterForm from './FilterForm';
 
@@ -66,10 +66,10 @@ export const FilterableApartementTable = React.createClass({
 
 function mapStateToProps(state) {
   return {
-    apartements: state.getIn(['apartements', 'items']),
-    filtertext: state.getIn(['apartements', 'filtertext']),
-    filterparam: state.getIn(['apartements', 'filterparam']),
-    isFetching: state.getIn(['apartements', 'isFetching'])
+    apartements: state.apartementReducer.getIn(['apartements', 'items']),
+    filtertext: state.apartementReducer.getIn(['apartements', 'filtertext']),
+    filterparam: state.apartementReducer.getIn(['apartements', 'filterparam']),
+    isFetching: state.apartementReducer.getIn(['apartements', 'isFetching'])
   };
 }
 

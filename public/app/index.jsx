@@ -7,9 +7,9 @@ import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
-import reducer from './reducer';
+import reducer from './reducers/reducer';
 import App from './components/App';
-import {fetchApartementsIfNeeded, setFilterparam, setFiltertext} from './action_creators';
+import {fetchApartementsIfNeeded, setFilterparam, setFiltertext} from './creators/action_creators';
 import createHistory from 'history/lib/createHashHistory';
 
 const loggerMiddleware = createLogger()
@@ -22,8 +22,6 @@ const store = createStoreWithMiddleware(reducer);
 store.dispatch(fetchApartementsIfNeeded('http://localhost:3015/api/apartements')).then(
   () => console.log(store.getState())
 );
-store.dispatch(setFilterparam('Name'));
-store.dispatch(setFiltertext(''));
 
 const routes = <Route component={App}>
   <Route path="/login" component={LoginContainer} />
