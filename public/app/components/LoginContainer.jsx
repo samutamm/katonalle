@@ -4,9 +4,10 @@ import * as actionCreators from '../creators/login_actions';
 import {Link} from 'react-router';
 
 export const LoginForm = React.createClass({
-  handleLogin: function() {
+  handleLogin: function(e) {
+    e.preventDefault();
     this.props.authenticate(
-      'http://localhost:3030/check',
+      'http://localhost:3030/login',
       this.refs.username.value,
       this.refs.password.value
     );

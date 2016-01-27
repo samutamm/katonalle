@@ -43,7 +43,8 @@ function sendAuthentication(url, username, password) {
       complete: function(reponse) {
         const statusCode = reponse.status;
         if (statusCode === 200) {
-          dispatch(receiveToken(reponse.body));
+          dispatch(receiveToken(reponse.responseJSON.token));
+          window.location.replace('#/profile');
         } else {
           dispatch(receiveError('Error while locking in. Please check credentials.'));
         }

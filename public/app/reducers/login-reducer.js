@@ -4,7 +4,7 @@ function initial() {
   return Map({
     session: Map({
       message: '',
-      token: '',
+      isAuthenticated: false,
       isChecking: false
     })
   });
@@ -15,8 +15,9 @@ function setFetchingFlag(state) {
 }
 
 function setToken(state, token) {
-  const newState = state.setIn(['session', 'token'], token);
-  return newState.setIn(['session', 'isChecking'], false);
+  const tokenAdded = state.setIn(['session', 'token'], token);
+  const authenticated = tokenAdded.setIn(['session', 'isAuthenticated'], true);
+  return authenticated.setIn(['session', 'isChecking'], false);
 }
 
 function setError(state, message) {

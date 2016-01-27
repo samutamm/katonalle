@@ -1,5 +1,7 @@
 import {ApartementsContainer} from './components/FilterableApartementTable';
 import {LoginContainer} from './components/LoginContainer';
+import {requireAuthentication} from './components/AuthenticatedComponent';
+import Profile from './components/Profile';
 import Router, {Route} from 'react-router';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -25,6 +27,7 @@ store.dispatch(fetchApartementsIfNeeded('http://localhost:3015/api/apartements')
 
 const routes = <Route component={App}>
   <Route path="/login" component={LoginContainer} />
+    <Route path="/profile" component={requireAuthentication(Profile)} />
   <Route path="/" component={ApartementsContainer} />
 </Route>;
 

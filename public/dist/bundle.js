@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "3cfc202f42b66aa3a2d7"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "33c065bfd6d2c266e3ab"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -8029,6 +8029,12 @@
 
 	var _LoginContainer = __webpack_require__(272);
 
+	var _AuthenticatedComponent = __webpack_require__(322);
+
+	var _Profile = __webpack_require__(323);
+
+	var _Profile2 = _interopRequireDefault(_Profile);
+
 	var _reactRouter = __webpack_require__(274);
 
 	var _reactRouter2 = _interopRequireDefault(_reactRouter);
@@ -8037,15 +8043,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactDom = __webpack_require__(322);
+	var _reactDom = __webpack_require__(324);
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _reduxThunk = __webpack_require__(323);
+	var _reduxThunk = __webpack_require__(325);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
-	var _reduxLogger = __webpack_require__(324);
+	var _reduxLogger = __webpack_require__(326);
 
 	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 
@@ -8053,11 +8059,11 @@
 
 	var _reactRedux = __webpack_require__(249);
 
-	var _reducer = __webpack_require__(325);
+	var _reducer = __webpack_require__(327);
 
 	var _reducer2 = _interopRequireDefault(_reducer);
 
-	var _App = __webpack_require__(328);
+	var _App = __webpack_require__(330);
 
 	var _App2 = _interopRequireDefault(_App);
 
@@ -8083,6 +8089,7 @@
 	  _reactRouter.Route,
 	  { component: _App2.default },
 	  _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _LoginContainer.LoginContainer }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/profile', component: (0, _AuthenticatedComponent.requireAuthentication)(_Profile2.default) }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/', component: _FilterableApartementTable.ApartementsContainer })
 	);
 
@@ -35067,50 +35074,60 @@
 	var LoginForm = exports.LoginForm = _react2.default.createClass({
 	  displayName: 'LoginForm',
 
-	  handleLogin: function handleLogin() {
-	    this.props.authenticate('http://localhost:3030/check', this.refs.username.value, this.refs.password.value);
+	  handleLogin: function handleLogin(e) {
+	    e.preventDefault();
+	    this.props.authenticate('http://localhost:3030/login', this.refs.username.value, this.refs.password.value);
 	  },
 	  render: function render() {
 	    return _react2.default.createElement(
-	      'form',
+	      'div',
 	      null,
 	      _react2.default.createElement(
-	        'h3',
-	        null,
-	        ' Log in: '
-	      ),
-	      _react2.default.createElement(
-	        'ul',
+	        'form',
 	        null,
 	        _react2.default.createElement(
-	          'span',
+	          'h3',
 	          null,
-	          'Username '
+	          ' Log in: '
 	        ),
-	        _react2.default.createElement('input', { type: 'text',
-	          ref: 'username' })
-	      ),
-	      _react2.default.createElement(
-	        'ul',
-	        null,
 	        _react2.default.createElement(
-	          'span',
+	          'ul',
 	          null,
-	          'Password '
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            'Username '
+	          ),
+	          _react2.default.createElement('input', { type: 'text',
+	            ref: 'username' })
 	        ),
-	        _react2.default.createElement('input', { type: 'text',
-	          ref: 'password' })
+	        _react2.default.createElement(
+	          'ul',
+	          null,
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            'Password '
+	          ),
+	          _react2.default.createElement('input', { type: 'text',
+	            ref: 'password' })
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { type: 'submit',
+	            onClick: this.handleLogin },
+	          'Log in'
+	        ),
+	        _react2.default.createElement(
+	          _reactRouter.Link,
+	          { to: '/register' },
+	          'or register as a client here'
+	        )
 	      ),
 	      _react2.default.createElement(
-	        'button',
-	        { type: 'submit',
-	          onClick: this.handleLogin },
-	        'Log in'
-	      ),
-	      _react2.default.createElement(
-	        _reactRouter.Link,
-	        { to: '/register' },
-	        'or register as a client here'
+	        'p',
+	        null,
+	        this.props.message
 	      )
 	    );
 	  }
@@ -35187,9 +35204,10 @@
 	      complete: function complete(reponse) {
 	        var statusCode = reponse.status;
 	        if (statusCode === 200) {
-	          dispatch(receiveToken(reponse.body));
+	          dispatch(receiveToken(reponse.responseJSON.token));
+	          window.location.replace('#/profile');
 	        } else {
-	          dispatch(receiveError(reponse.body));
+	          dispatch(receiveError('Error while locking in. Please check credentials.'));
 	        }
 	      }
 	    });
@@ -39618,13 +39636,109 @@
 /* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(77), RootInstanceProvider = __webpack_require__(85), ReactMount = __webpack_require__(87), React = __webpack_require__(139); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.requireAuthentication = requireAuthentication;
+
+	var _react = __webpack_require__(139);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(249);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function requireAuthentication(Component) {
+	  var AuthenticatedComponent = _react2.default.createClass({
+	    displayName: 'AuthenticatedComponent',
+
+	    componentWillMount: function componentWillMount() {
+	      this.checkAuth();
+	    },
+	    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	      this.checkAuth();
+	    },
+	    checkAuth: function checkAuth() {
+	      if (!this.props.isAuthenticated) {
+	        var redirectAfterLogin = this.props.location.pathname;
+	        window.location.replace('/login?next=' + redirectAfterLogin);
+	      }
+	    },
+	    render: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        this.props.isAuthenticated === true ? _react2.default.createElement(Component, this.props) : null
+	      );
+	    }
+	  });
+
+	  var mapStateToProps = function mapStateToProps(state) {
+	    return {
+	      token: state.loginReducer.getIn(['session', 'token']),
+	      isAuthenticated: state.loginReducer.getIn(['session', 'isAuthenticated'])
+	    };
+	  };
+
+	  return (0, _reactRedux.connect)(mapStateToProps)(AuthenticatedComponent);
+	}
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(246); if (makeExportsHot(module, __webpack_require__(139))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "AuthenticatedComponent.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
+
+/***/ },
+/* 323 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(77), RootInstanceProvider = __webpack_require__(85), ReactMount = __webpack_require__(87), React = __webpack_require__(139); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(139);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
+	  displayName: 'Profile',
+
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'p',
+	        null,
+	        'Moikkaaa profile!'
+	      )
+	    );
+	  }
+	});
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(246); if (makeExportsHot(module, __webpack_require__(139))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Profile.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
+
+/***/ },
+/* 324 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	module.exports = __webpack_require__(141);
 
 
 /***/ },
-/* 323 */
+/* 325 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -39643,7 +39757,7 @@
 	module.exports = thunkMiddleware;
 
 /***/ },
-/* 324 */
+/* 326 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -39840,7 +39954,7 @@
 	module.exports = createLogger;
 
 /***/ },
-/* 325 */
+/* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(77), RootInstanceProvider = __webpack_require__(85), ReactMount = __webpack_require__(87), React = __webpack_require__(139); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39851,11 +39965,11 @@
 	  value: true
 	});
 
-	var _apartementReducer = __webpack_require__(326);
+	var _apartementReducer = __webpack_require__(328);
 
 	var _apartementReducer2 = _interopRequireDefault(_apartementReducer);
 
-	var _loginReducer = __webpack_require__(327);
+	var _loginReducer = __webpack_require__(329);
 
 	var _loginReducer2 = _interopRequireDefault(_loginReducer);
 
@@ -39874,7 +39988,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ },
-/* 326 */
+/* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(77), RootInstanceProvider = __webpack_require__(85), ReactMount = __webpack_require__(87), React = __webpack_require__(139); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39936,7 +40050,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ },
-/* 327 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(77), RootInstanceProvider = __webpack_require__(85), ReactMount = __webpack_require__(87), React = __webpack_require__(139); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39968,7 +40082,7 @@
 	  return (0, _immutable.Map)({
 	    session: (0, _immutable.Map)({
 	      message: '',
-	      token: '',
+	      isAuthenticated: false,
 	      isChecking: false
 	    })
 	  });
@@ -39979,8 +40093,9 @@
 	}
 
 	function setToken(state, token) {
-	  var newState = state.setIn(['session', 'token'], token);
-	  return newState.setIn(['session', 'isChecking'], false);
+	  var tokenAdded = state.setIn(['session', 'token'], token);
+	  var authenticated = tokenAdded.setIn(['session', 'isAuthenticated'], true);
+	  return authenticated.setIn(['session', 'isChecking'], false);
 	}
 
 	function setError(state, message) {
@@ -39992,7 +40107,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ },
-/* 328 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(77), RootInstanceProvider = __webpack_require__(85), ReactMount = __webpack_require__(87), React = __webpack_require__(139); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
