@@ -34,18 +34,19 @@ function sendAuthentication(url, username, password) {
     dispatch(requestLogin());
     $.ajax({
       url: url,
-      username: username,
-      password: password,
+      dataType: 'json',
       type: "GET",
       async: true,
-      success: function(text) {
-        dispatch(receiveToken(text));
+      headers: {
+        "Authorization": "Basic " + btoa(username + ":" + password)
       },
-      error: function (text) {
-        dispatch(receiveError(text));
-      },
-      complete: function(text) {
-        dispatch(receiveError(text));
+      complete: function(reponse) {
+        const statusCode = reponse.status;
+        if (statusCode === 200) {
+          dispatch(receiveToken(reponse.body));
+        } else {
+          dispatch(receiveError('Error while locking in. Please check credentials.'));
+        }
       }
     });
   }

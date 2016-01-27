@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "9b8490e26529d5da0949"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "3cfc202f42b66aa3a2d7"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -35067,9 +35067,8 @@
 	var LoginForm = exports.LoginForm = _react2.default.createClass({
 	  displayName: 'LoginForm',
 
-	  login: function login() {
-	    console.log(this.refs.username);
-	    console.log(this.refs.password);
+	  handleLogin: function handleLogin() {
+	    this.props.authenticate('http://localhost:3030/check', this.refs.username.value, this.refs.password.value);
 	  },
 	  render: function render() {
 	    return _react2.default.createElement(
@@ -35104,7 +35103,8 @@
 	      ),
 	      _react2.default.createElement(
 	        'button',
-	        { onClick: this.login },
+	        { type: 'submit',
+	          onClick: this.handleLogin },
 	        'Log in'
 	      ),
 	      _react2.default.createElement(
@@ -35178,18 +35178,19 @@
 	    dispatch(requestLogin());
 	    $.ajax({
 	      url: url,
-	      username: username,
-	      password: password,
+	      dataType: 'json',
 	      type: "GET",
 	      async: true,
-	      success: function success(text) {
-	        dispatch(receiveToken(text));
+	      headers: {
+	        "Authorization": "Basic " + btoa(username + ":" + password)
 	      },
-	      error: function error(text) {
-	        dispatch(receiveError(text));
-	      },
-	      complete: function complete(text) {
-	        dispatch(receiveError(text));
+	      complete: function complete(reponse) {
+	        var statusCode = reponse.status;
+	        if (statusCode === 200) {
+	          dispatch(receiveToken(reponse.body));
+	        } else {
+	          dispatch(receiveError(reponse.body));
+	        }
 	      }
 	    });
 	  };

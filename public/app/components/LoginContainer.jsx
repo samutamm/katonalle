@@ -5,26 +5,33 @@ import {Link} from 'react-router';
 
 export const LoginForm = React.createClass({
   handleLogin: function() {
-    console.log(this.refs.username.value);
-    console.log(this.refs.password.value);
+    this.props.authenticate(
+      'http://localhost:3030/check',
+      this.refs.username.value,
+      this.refs.password.value
+    );
   },
   render: function() {
     return (
-      <form>
-        <h3> Log in: </h3>
-        <ul>
-          <span>Username </span>
-          <input type="text"
-                 ref="username" />
-        </ul>
-        <ul>
-          <span>Password </span>
-          <input type="text"
-                 ref="password" />
-        </ul>
-        <button onClick={this.handleLogin}>Log in</button>
-        <Link to={'/register'}>or register as a client here</Link>
-      </form>
+      <div>
+        <form>
+          <h3> Log in: </h3>
+          <ul>
+            <span>Username </span>
+            <input type="text"
+                   ref="username" />
+          </ul>
+          <ul>
+            <span>Password </span>
+            <input type="text"
+                   ref="password" />
+          </ul>
+          <button type="submit"
+                  onClick={this.handleLogin}>Log in</button>
+          <Link to={'/register'}>or register as a client here</Link>
+        </form>
+        <p>{this.props.message}</p>
+      </div>
     );
   }
 });
