@@ -27,7 +27,8 @@ store.dispatch(fetchApartementsIfNeeded('http://localhost:3015/api/apartements')
 
 const routes = <Route component={App}>
   <Route path="/login" component={LoginContainer} />
-    <Route path="/profile" component={requireAuthentication(Profile)} />
+    <Route path="/register" component={RegisterContainer} />
+  <Route path="/profile" component={requireAuthentication(Profile)} />
   <Route path="/" component={ApartementsContainer} />
 </Route>;
 
