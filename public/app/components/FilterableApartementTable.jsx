@@ -1,4 +1,3 @@
-import configurations from './Configurations';
 import React from 'react';
 import {connect} from 'react-redux';
 import * as actionCreators from '../creators/action_creators';

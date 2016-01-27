@@ -29,7 +29,9 @@ export function requireAuthentication(Component) {
 
   const mapStateToProps = (state) => ({
       token: state.loginReducer.getIn(['session', 'token']),
-      isAuthenticated: state.loginReducer.getIn(['session', 'isAuthenticated'])
+      isAuthenticated: state.loginReducer.getIn(['session', 'isAuthenticated']),
+      username: state.loginReducer.getIn(['session', 'username']),
+      role: state.loginReducer.getIn(['session', 'role'])
   });
 
   return connect(mapStateToProps)(AuthenticatedComponent);

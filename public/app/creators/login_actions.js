@@ -6,10 +6,10 @@ function requestLogin() {
   };
 }
 
-function receiveToken(token) {
+function receiveToken(session) {
   return {
     type: 'RECEIVE_TOKEN',
-    token: token
+    session: session
   };
 }
 
@@ -43,7 +43,7 @@ function sendAuthentication(url, username, password) {
       complete: function(reponse) {
         const statusCode = reponse.status;
         if (statusCode === 200) {
-          dispatch(receiveToken(reponse.responseJSON.token));
+          dispatch(receiveToken(reponse.responseJSON));
           window.location.replace('#/profile');
         } else {
           dispatch(receiveError('Error while locking in. Please check credentials.'));

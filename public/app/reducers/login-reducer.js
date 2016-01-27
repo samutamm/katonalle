@@ -1,4 +1,4 @@
-import {List, Map} from 'immutable';
+import {List, Map, fromJS} from 'immutable';
 
 function initial() {
   return Map({
@@ -14,9 +14,9 @@ function setFetchingFlag(state) {
   return state.setIn(['session', 'isChecking'], true);
 }
 
-function setToken(state, token) {
-  const tokenAdded = state.setIn(['session', 'token'], token);
-  const authenticated = tokenAdded.setIn(['session', 'isAuthenticated'], true);
+function setToken(state, session) {
+  const sessionAdded = state.set('session', fromJS(session));
+  const authenticated = sessionAdded.setIn(['session', 'isAuthenticated'], true);
   return authenticated.setIn(['session', 'isChecking'], false);
 }
 
@@ -30,7 +30,7 @@ export default function(state = initial(), action) {
   case 'REQUEST_LOGIN':
     return setFetchingFlag(state);
   case 'RECEIVE_TOKEN':
-    return setToken(state, action.token);
+    return setToken(state, action.session);
   case 'RECEIVE_AUTH_ERROR':
     return setError(state, action.error);
   }
