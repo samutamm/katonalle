@@ -76,6 +76,7 @@ function sendToken(url, token) {
           dispatch(tokenOK());
         } else {
           dispatch(receiveError('Error: ' + response.status));
+          window.location.replace('#/login');
         }
       }
     });
@@ -103,9 +104,16 @@ export function checkToken(url) {
   }
 }
 
-export function logOut() {
+function logOut() {
   localStorage.removeItem('token');
   return {
     type: "LOGOUT"
   };
+}
+
+export function logoutAndRedirect() {
+    return (dispatch, state) => {
+        dispatch(logOut());
+        window.location.replace('#/login');
+    }
 }

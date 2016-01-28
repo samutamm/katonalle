@@ -1,5 +1,6 @@
 import {ApartementsContainer} from './components/FilterableApartementTable';
 import {LoginContainer} from './components/LoginContainer';
+import {LogoutContainer} from './components/LogoutContainer';
 import {requireAuthentication} from './components/AuthenticatedComponent';
 import {RegisterContainer} from './components/RegisterContainer';
 import Profile from './components/Profile';
@@ -15,6 +16,7 @@ import App from './components/App';
 import {fetchApartementsIfNeeded, setFilterparam, setFiltertext} from './creators/action_creators';
 import createHistory from 'history/lib/createHashHistory';
 import {receiveToken} from './creators/login_actions';
+
 const loggerMiddleware = createLogger()
 
 const createStoreWithMiddleware = applyMiddleware(
@@ -36,6 +38,7 @@ store.dispatch(fetchApartementsIfNeeded('http://localhost:3015/api/apartements')
 
 const routes = <Route component={App}>
   <Route path="/login" component={LoginContainer} />
+  <Route path="/logout" component={LogoutContainer} />
   <Route path="/register" component={RegisterContainer} role="CLIENT" />
   <Route path="/profile" component={requireAuthentication(Profile)} />
   <Route path="/" component={ApartementsContainer} />
