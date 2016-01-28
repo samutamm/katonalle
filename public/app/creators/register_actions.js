@@ -42,17 +42,17 @@ function sendRegistration(url, body) {
       complete: function(reponse) {
         const statusCode = reponse.status;
         if (statusCode === 200) {
-          dispatch(receiveToken(reponse.responseJSON));
-          window.location.replace('#/profile');
+          dispatch(registerSuccess());
+          window.location.replace('#/login');
         } else {
-          dispatch(receiveError('Error while locking in. Please check credentials.'));
+          dispatch(registerError('Error: ' + response.body));
         }
       }
     });
   }
 }
 
-export function authenticate(url, body) {
+export function register(url, body) {
   return (dispatch, getState) => {
     if (shouldRegister(getState().loginReducer)) {
       return dispatch(sendRegistration(url, body))

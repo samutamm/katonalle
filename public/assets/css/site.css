@@ -12,3 +12,7 @@
 #selectedbutton {
   background-color: red
 }
+
+.invalid {
+    border-color: red
+}

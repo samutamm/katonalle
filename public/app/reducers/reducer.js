@@ -6,7 +6,7 @@ import { combineReducers } from 'redux';
 const reducer = combineReducers({
   apartementReducer,
   loginReducer,
-  register
+  registerReducer
 })
 
 export default reducer;
