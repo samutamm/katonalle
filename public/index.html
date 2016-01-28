@@ -17,7 +17,6 @@
   </head>
 
   <body>
-
     <nav class="navbar navbar-default" role="navigation">
       <div class="container-fluid">
 
@@ -44,9 +43,14 @@
     </nav>
 
     <div id="main-container">
+      token: <p id="test" ></p>
       <div id="content"></div>
-    <!--  <script src="http://localhost:8080/webpack-dev-server.js"></script> -->
       <script src="dist/bundle.js"></script>
+      <script>
+        var doc = document.getElementById('test');
+        var token = localStorage.getItem('token');
+        doc.innerHTML = token;
+      </script>
     </div>
   </body>
 </html>

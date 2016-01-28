@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "00d8de23c701a2b2b736"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "fae0c9c9f039e8112d63"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -8075,6 +8075,8 @@
 
 	var _createHashHistory2 = _interopRequireDefault(_createHashHistory);
 
+	var _login_actions = __webpack_require__(271);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var loggerMiddleware = (0, _reduxLogger2.default)();
@@ -8085,6 +8087,11 @@
 	var store = createStoreWithMiddleware(_reducer2.default);
 	store.dispatch((0, _action_creators.fetchApartementsIfNeeded)('http://localhost:3015/api/apartements')).then(function () {
 	  return console.log(store.getState());
+	}).then(function () {
+	  var token = localStorage.getItem('token');
+	  if (token !== null && token.length > 12) {
+	    store.dispatch((0, _login_actions.receiveToken)({ token: token }));
+	  }
 	});
 
 	var routes = _react2.default.createElement(
@@ -35110,17 +35117,21 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.receiveToken = receiveToken;
 	exports.authenticate = authenticate;
+	exports.checkToken = checkToken;
+	exports.logOut = logOut;
 
 	var _immutable = __webpack_require__(265);
 
-	function requestLogin() {
+	function request() {
 	  return {
-	    type: 'REQUEST_LOGIN'
+	    type: 'REQUEST'
 	  };
 	}
 
 	function receiveToken(session) {
+	  localStorage.setItem('token', session.token);
 	  return {
 	    type: 'RECEIVE_TOKEN',
 	    session: session
@@ -35128,13 +35139,20 @@
 	}
 
 	function receiveError(message) {
+	  localStorage.removeItem('token');
 	  return {
 	    type: 'RECEIVE_AUTH_ERROR',
 	    error: message
 	  };
 	}
 
-	function shouldAuthenticate(state) {
+	function tokenOK() {
+	  return {
+	    type: 'TOKEN_OK'
+	  };
+	}
+
+	function canFetch(state) {
 	  var isChecking = state.getIn(['session', 'isChecking']);
 	  if (!isChecking) {
 	    return true;
@@ -35145,7 +35163,7 @@
 
 	function sendAuthentication(url, username, password) {
 	  return function (dispatch) {
-	    dispatch(requestLogin());
+	    dispatch(request());
 	    $.ajax({
 	      url: url,
 	      dataType: 'json',
@@ -35155,8 +35173,7 @@
 	        "Authorization": "Basic " + btoa(username + ":" + password)
 	      },
 	      complete: function complete(reponse) {
-	        var statusCode = reponse.status;
-	        if (statusCode === 200) {
+	        if (reponse.status === 200) {
 	          dispatch(receiveToken(reponse.responseJSON));
 	          window.location.replace('#/profile');
 	        } else {
@@ -35167,13 +35184,54 @@
 	  };
 	}
 
+	function sendToken(url, token) {
+	  return function (dispatch) {
+	    dispatch(request());
+	    debugger;
+	    $.ajax({
+	      url: url,
+	      dataType: 'json',
+	      type: "GET",
+	      async: true,
+	      headers: {
+	        "Authorization": "Basic " + token
+	      },
+	      complete: function complete(reponse) {
+	        if (reponse.status === 200) {
+	          dispatch(tokenOK());
+	        } else {
+	          dispatch(receiveError('Error: ' + response.status));
+	        }
+	      }
+	    });
+	  };
+	}
+
 	function authenticate(url, username, password) {
 	  return function (dispatch, getState) {
-	    if (shouldAuthenticate(getState().loginReducer)) {
+	    if (canFetch(getState().loginReducer)) {
 	      return dispatch(sendAuthentication(url, username, password));
 	    } else {
 	      return Promise.resolve();
 	    }
+	  };
+	}
+
+	function checkToken(url) {
+	  return function (dispatch, getState) {
+	    var token = localStorage.getItem('token');
+	    if (canFetch(getState().loginReducer) && token !== undefined) {
+	      return dispatch(sendToken(url, token));
+	    } else {
+	      return Promise.resolve();
+	    }
+	  };
+	}
+
+	function logOut() {
+	  localStorage.removeItem('token');
+	  return {
+	    type: "LOGOUT"
 	  };
 	}
 
@@ -39604,6 +39662,12 @@
 
 	var _reactRedux = __webpack_require__(244);
 
+	var _login_actions = __webpack_require__(271);
+
+	var actionCreators = _interopRequireWildcard(_login_actions);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function requireAuthentication(Component) {
@@ -39618,8 +39682,8 @@
 	    },
 	    checkAuth: function checkAuth() {
 	      if (!this.props.isAuthenticated) {
-	        var redirectAfterLogin = this.props.location.pathname;
-	        window.location.replace('#/login');
+	        this.props.checkToken("http://localhost:3030/check");
+	        //window.location.replace(`#/login`);
 	      }
 	    },
 	    render: function render() {
@@ -39640,7 +39704,7 @@
 	    };
 	  };
 
-	  return (0, _reactRedux.connect)(mapStateToProps)(AuthenticatedComponent);
+	  return (0, _reactRedux.connect)(mapStateToProps, actionCreators)(AuthenticatedComponent);
 	}
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(266); if (makeExportsHot(module, __webpack_require__(139))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "AuthenticatedComponent.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
@@ -39729,8 +39793,8 @@
 	    };
 	    this.fields().forEach(function (field) {
 	      var name = field.name.toLowerCase();
-	      if (json[name].length < field.length) {
-	        alert('Please fill all fields!');
+	      if (json[name] !== undefined && json[name].length < field.length) {
+	        alert('Field ' + field.name + ' has to be at least ' + field.length + ' long.');
 	        return;
 	      }
 	    });
@@ -39739,7 +39803,7 @@
 	      return;
 	    }
 	    json.role = this.props.route.role;
-	    console.log(json);
+	    this.props.register('http://localhost:3030/api/persons', json);
 	  },
 	  fields: function fields() {
 	    return [{ name: 'Name', length: 3 }, { name: 'Email', length: 4 }, { name: 'Address', length: 3 }, { name: 'Username', length: 3 }, { name: 'Password', length: 8 }, { name: 'Password_again', length: 8 }];
@@ -39802,7 +39866,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.authenticate = authenticate;
+	exports.register = register;
 
 	var _immutable = __webpack_require__(265);
 
@@ -39848,17 +39912,17 @@
 	      complete: function complete(reponse) {
 	        var statusCode = reponse.status;
 	        if (statusCode === 200) {
-	          dispatch(receiveToken(reponse.responseJSON));
-	          window.location.replace('#/profile');
+	          dispatch(registerSuccess());
+	          window.location.replace('#/login');
 	        } else {
-	          dispatch(receiveError('Error while locking in. Please check credentials.'));
+	          dispatch(registerError('Error: ' + response.body));
 	        }
 	      }
 	    });
 	  };
 	}
 
-	function authenticate(url, body) {
+	function register(url, body) {
 	  return function (dispatch, getState) {
 	    if (shouldRegister(getState().loginReducer)) {
 	      return dispatch(sendRegistration(url, body));
@@ -40379,12 +40443,16 @@
 	  var action = arguments[1];
 
 	  switch (action.type) {
-	    case 'REQUEST_LOGIN':
+	    case 'REQUEST':
 	      return setFetchingFlag(state);
 	    case 'RECEIVE_TOKEN':
 	      return setToken(state, action.session);
 	    case 'RECEIVE_AUTH_ERROR':
 	      return setError(state, action.error);
+	    case 'TOKEN_OK':
+	      return setAuthenticated(state);
+	    case 'LOGOUT':
+	      return logOut(state);
 	  }
 	  return state;
 	};
@@ -40396,7 +40464,8 @@
 	    session: (0, _immutable.Map)({
 	      message: '',
 	      isAuthenticated: false,
-	      isChecking: false
+	      isChecking: false,
+	      token: null
 	    })
 	  });
 	}
@@ -40405,15 +40474,24 @@
 	  return state.setIn(['session', 'isChecking'], true);
 	}
 
-	function setToken(state, session) {
-	  var sessionAdded = state.set('session', (0, _immutable.fromJS)(session));
-	  var authenticated = sessionAdded.setIn(['session', 'isAuthenticated'], true);
+	function setAuthenticated(state) {
+	  var authenticated = state.setIn(['session', 'isAuthenticated'], true);
 	  return authenticated.setIn(['session', 'isChecking'], false);
+	}
+
+	function setToken(state, session) {
+	  return setAuthenticated(state.set('session', (0, _immutable.fromJS)(session)));
 	}
 
 	function setError(state, message) {
 	  var newState = state.setIn(['session', 'message'], message);
-	  return newState.setIn(['session', 'isChecking'], false);
+	  var notAuthenticated = newState.setIn(['session', 'isAuthenticated'], false);
+	  return notAuthenticated.setIn(['session', 'isChecking'], false);
+	}
+
+	function logOut(state) {
+	  var noToken = state.setIn(['session', 'token'], null);
+	  return noToken.setIn(['session', 'isAuthenticated'], false);
 	}
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(266); if (makeExportsHot(module, __webpack_require__(139))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "login-reducer.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }

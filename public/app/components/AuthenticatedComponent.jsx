@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import * as actionCreators from '../creators/login_actions';
 
 export function requireAuthentication(Component) {
   const AuthenticatedComponent = React.createClass({
@@ -11,8 +12,8 @@ export function requireAuthentication(Component) {
     },
     checkAuth: function() {
       if (!this.props.isAuthenticated) {
-          let redirectAfterLogin = this.props.location.pathname;
-          window.location.replace(`#/login`);
+        this.props.checkToken("http://localhost:3030/check");
+        //window.location.replace(`#/login`);
       }
     },
     render: function() {
@@ -34,5 +35,8 @@ export function requireAuthentication(Component) {
       role: state.loginReducer.getIn(['session', 'role'])
   });
 
-  return connect(mapStateToProps)(AuthenticatedComponent);
+  return connect(
+    mapStateToProps,
+    actionCreators
+  )(AuthenticatedComponent);
 }

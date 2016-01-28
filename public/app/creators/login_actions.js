@@ -1,12 +1,13 @@
 import {Map} from 'immutable';
 
-function requestLogin() {
+function request() {
   return {
-    type: 'REQUEST_LOGIN'
+    type: 'REQUEST'
   };
 }
 
-function receiveToken(session) {
+export function receiveToken(session) {
+  localStorage.setItem('token', session.token);
   return {
     type: 'RECEIVE_TOKEN',
     session: session
@@ -14,13 +15,20 @@ function receiveToken(session) {
 }
 
 function receiveError(message) {
+  localStorage.removeItem('token');
   return {
     type: 'RECEIVE_AUTH_ERROR',
     error: message
   };
 }
 
-function shouldAuthenticate(state) {
+function tokenOK() {
+  return {
+    type: 'TOKEN_OK'
+  };
+}
+
+function canFetch(state) {
   const isChecking = state.getIn(['session', 'isChecking']);
   if(!isChecking) {
     return true;
@@ -31,7 +39,7 @@ function shouldAuthenticate(state) {
 
 function sendAuthentication(url, username, password) {
   return dispatch => {
-    dispatch(requestLogin());
+    dispatch(request());
     $.ajax({
       url: url,
       dataType: 'json',
@@ -41,8 +49,7 @@ function sendAuthentication(url, username, password) {
         "Authorization": "Basic " + btoa(username + ":" + password)
       },
       complete: function(reponse) {
-        const statusCode = reponse.status;
-        if (statusCode === 200) {
+        if (reponse.status === 200) {
           dispatch(receiveToken(reponse.responseJSON));
           window.location.replace('#/profile');
         } else {
@@ -53,12 +60,52 @@ function sendAuthentication(url, username, password) {
   }
 }
 
+function sendToken(url, token) {
+  return dispatch => {
+    dispatch(request());
+    $.ajax({
+      url: url,
+      dataType: 'json',
+      type: "GET",
+      async: true,
+      headers: {
+        "Authorization": "Basic " + token
+      },
+      complete: function(reponse) {
+        if (reponse.status === 200) {
+          dispatch(tokenOK());
+        } else {
+          dispatch(receiveError('Error: ' + response.status));
+        }
+      }
+    });
+  }
+}
+
 export function authenticate(url, username, password) {
   return (dispatch, getState) => {
-    if (shouldAuthenticate(getState().loginReducer)) {
+    if (canFetch(getState().loginReducer)) {
       return dispatch(sendAuthentication(url, username, password))
     } else {
       return Promise.resolve()
     }
   }
+}
+
+export function checkToken(url) {
+  return (dispatch, getState) => {
+    let token = localStorage.getItem('token');
+    if (canFetch(getState().loginReducer) && token !== undefined) {
+      return dispatch(sendToken(url, token))
+    } else {
+      return Promise.resolve()
+    }
+  }
+}
+
+export function logOut() {
+  localStorage.removeItem('token');
+  return {
+    type: "LOGOUT"
+  };
 }

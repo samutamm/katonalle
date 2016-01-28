@@ -14,7 +14,7 @@ import reducer from './reducers/reducer';
 import App from './components/App';
 import {fetchApartementsIfNeeded, setFilterparam, setFiltertext} from './creators/action_creators';
 import createHistory from 'history/lib/createHashHistory';
-
+import {receiveToken} from './creators/login_actions';
 const loggerMiddleware = createLogger()
 
 const createStoreWithMiddleware = applyMiddleware(
@@ -24,7 +24,15 @@ const createStoreWithMiddleware = applyMiddleware(
 const store = createStoreWithMiddleware(reducer);
 store.dispatch(fetchApartementsIfNeeded('http://localhost:3015/api/apartements')).then(
   () => console.log(store.getState())
+).then(
+  () => {
+    let token = localStorage.getItem('token');
+    if (token !== null && token.length > 12) {
+        store.dispatch(receiveToken({token: token }));
+    }
+  }
 );
+
 
 const routes = <Route component={App}>
   <Route path="/login" component={LoginContainer} />
