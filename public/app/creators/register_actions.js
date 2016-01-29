@@ -1,4 +1,5 @@
 import {Map} from 'immutable';
+import {browserHistory} from 'react-router';
 
 function requestRegister() {
   return {
@@ -43,7 +44,7 @@ function sendRegistration(url, body) {
         const statusCode = reponse.status;
         if (statusCode === 200) {
           dispatch(registerSuccess());
-          window.location.replace('#/login');
+          browserHistory.push('/login');
         } else {
           dispatch(registerError('Error: ' + response.body));
         }

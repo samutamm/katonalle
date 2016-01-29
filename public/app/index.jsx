@@ -14,7 +14,8 @@ import {Provider} from 'react-redux';
 import reducer from './reducers/reducer';
 import App from './components/App';
 import {fetchApartementsIfNeeded, setFilterparam, setFiltertext} from './creators/action_creators';
-import createHistory from 'history/lib/createHashHistory';
+import { browserHistory, useRouterHistory } from 'react-router'
+import { createHashHistory } from 'history';
 import {receiveToken} from './creators/login_actions';
 
 const loggerMiddleware = createLogger()
@@ -44,13 +45,11 @@ const routes = <Route component={App}>
   <Route path="/" component={ApartementsContainer} />
 </Route>;
 
-var history = createHistory({
-  queryKey: false
-});
+const appHistory = useRouterHistory(createHashHistory)({ queryKey: false });
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router history={history}>
+    <Router history={appHistory}>
       {routes}
     </Router>
   </Provider>,
