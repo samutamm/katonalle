@@ -1,10 +1,4 @@
-import {ApartementsContainer} from './components/FilterableApartementTable';
-import {LoginContainer} from './components/LoginContainer';
-import {LogoutContainer} from './components/LogoutContainer';
-import {requireAuthentication} from './components/AuthenticatedComponent';
-import {RegisterContainer} from './components/RegisterContainer';
-import Profile from './components/Profile';
-import Router, {Route} from 'react-router';
+import Router from 'react-router';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import thunkMiddleware from 'redux-thunk';
@@ -12,11 +6,9 @@ import createLogger from 'redux-logger';
 import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
 import reducer from './reducers/reducer';
-import App from './components/App';
-import {fetchApartementsIfNeeded, setFilterparam, setFiltertext} from './creators/action_creators';
-import { browserHistory, useRouterHistory } from 'react-router'
-import { createHashHistory } from 'history';
+import {fetchApartementsIfNeeded} from './creators/action_creators';
 import {receiveToken} from './creators/login_actions';
+import {routes, appHistory} from './components/Router.js';
 
 const loggerMiddleware = createLogger()
 
@@ -35,17 +27,6 @@ store.dispatch(fetchApartementsIfNeeded('http://localhost:3015/api/apartements')
     }
   }
 );
-
-
-const routes = <Route component={App}>
-  <Route path="/login" component={LoginContainer} />
-  <Route path="/logout" component={LogoutContainer} />
-  <Route path="/register" component={RegisterContainer} role="CLIENT" />
-  <Route path="/profile" component={requireAuthentication(Profile)} />
-  <Route path="/" component={ApartementsContainer} />
-</Route>;
-
-const appHistory = useRouterHistory(createHashHistory)({ queryKey: false });
 
 ReactDOM.render(
   <Provider store={store}>

@@ -1,5 +1,5 @@
 import {Map} from 'immutable';
-import {browserHistory} from 'react-router';
+import {appHistory} from './../components/Router.js';
 
 function request() {
   return {
@@ -52,7 +52,7 @@ function sendAuthentication(url, username, password) {
       complete: function(reponse) {
         if (reponse.status === 200) {
           dispatch(receiveToken(reponse.responseJSON));
-          browserHistory.push('/profile');
+          appHistory.push('/profile');
         } else {
           dispatch(receiveError('Error while locking in. Please check credentials.'));
         }
@@ -77,7 +77,7 @@ function sendToken(url, token) {
           dispatch(tokenOK());
         } else {
           dispatch(receiveError('Error: ' + response.status));
-          browserHistory.push('/login');
+          appHistory.push('/login');
         }
       }
     });
@@ -115,6 +115,6 @@ function logOut() {
 export function logoutAndRedirect() {
     return (dispatch, state) => {
         dispatch(logOut());
-        browserHistory.push('/login');
+        appHistory.push('/login');
     }
 }
