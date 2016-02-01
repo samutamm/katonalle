@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "14d3d59fc9bce184558a"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "f15a5c88ac587443ba4f"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -40626,12 +40626,12 @@
 	      _react2.default.createElement(
 	        'td',
 	        null,
-	        this.props.apartement.Name
+	        this.props.apartement.name
 	      ),
 	      _react2.default.createElement(
 	        'td',
 	        null,
-	        this.props.apartement.Address
+	        this.props.apartement.city
 	      )
 	    );
 	  }
@@ -40654,10 +40654,10 @@
 	    }
 	    var rows = [];
 	    this.props.apartements.forEach(function (apartement) {
-	      if (apartement[this.props.filterparam].indexOf(this.props.filtertext) === -1) {
+	      if (apartement[this.props.filterparam.toLowerCase()].indexOf(this.props.filtertext) === -1) {
 	        return;
 	      }
-	      rows.push(_react2.default.createElement(ApartementRow, { apartement: apartement, key: apartement.Name }));
+	      rows.push(_react2.default.createElement(ApartementRow, { apartement: apartement, key: apartement.name }));
 	    }.bind(this));
 	    return _react2.default.createElement(
 	      'div',
@@ -40768,7 +40768,7 @@
 	  displayName: 'FilterParam',
 
 	  render: function render() {
-	    var names = ['Name', 'Address'];
+	    var names = ['Name', 'City'];
 	    var buttons = [];
 	    for (var i = 0; i < names.length; i++) {
 	      var name = names[i];
@@ -41402,6 +41402,7 @@
 	  displayName: 'Apartement',
 
 	  render: function render() {
+	    var apartementIndex = this.props.params.index;
 	    return _react2.default.createElement(
 	      'div',
 	      null,

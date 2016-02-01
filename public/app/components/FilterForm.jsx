@@ -16,7 +16,7 @@ var ParamButton = React.createClass({
 
 var FilterParam = React.createClass({
   render: function() {
-    var names = ['Name', 'Address'];
+    var names = ['Name', 'City'];
     var buttons = [];
     for(var i = 0; i < names.length; i++) {
       var name = names[i];

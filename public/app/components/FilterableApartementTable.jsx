@@ -8,8 +8,8 @@ var ApartementRow = React.createClass({
   render: function() {
     return (
       <tr className="ApartementRow" >
-        <td>{this.props.apartement.Name}</td>
-        <td>{this.props.apartement.Address}</td>
+        <td>{this.props.apartement.name}</td>
+        <td>{this.props.apartement.city}</td>
       </tr>
     );
   }
@@ -26,10 +26,10 @@ var ApartementTable = React.createClass({
     }
     var rows = [];
     this.props.apartements.forEach(function(apartement) {
-        if(apartement[this.props.filterparam].indexOf(this.props.filtertext) === -1) {
+        if(apartement[this.props.filterparam.toLowerCase()].indexOf(this.props.filtertext) === -1) {
             return;
         }
-        rows.push(<ApartementRow apartement={apartement} key={apartement.Name} />);
+        rows.push(<ApartementRow apartement={apartement} key={apartement.name} />);
     }.bind(this));
     return (
       <div>
