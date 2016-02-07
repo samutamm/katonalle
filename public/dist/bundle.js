@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "f15a5c88ac587443ba4f"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "1c5647e2d08f2f6fa1d4"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -40298,7 +40298,10 @@
 	  };
 	}
 
-	function sendToken(url, token) {
+	function sendToken(url, token, role) {
+	  if (role === undefined) {
+	    role = "ALL";
+	  }
 	  return function (dispatch) {
 	    dispatch(request());
 	    $.ajax({
@@ -40307,13 +40310,13 @@
 	      type: "GET",
 	      async: true,
 	      headers: {
-	        "Authorization": "Basic " + token
+	        "Authorization": "Basic " + token + " " + role
 	      },
-	      complete: function complete(reponse) {
-	        if (reponse.status === 200) {
+	      complete: function complete(response) {
+	        if (response.status === 200) {
 	          dispatch(tokenOK());
 	        } else {
-	          dispatch(receiveError('Error: ' + response.status));
+	          dispatch(receiveError('Please log in first!'));
 	          _Router.appHistory.push('/login');
 	        }
 	      }
@@ -40331,11 +40334,11 @@
 	  };
 	}
 
-	function checkToken(url) {
+	function checkToken(url, role) {
 	  return function (dispatch, getState) {
 	    var token = localStorage.getItem('token');
 	    if (canFetch(getState().loginReducer) && token !== undefined) {
-	      return dispatch(sendToken(url, token));
+	      return dispatch(sendToken(url, token, role));
 	    } else {
 	      return Promise.resolve();
 	    }
@@ -40394,21 +40397,25 @@
 
 	var _SingleApartement = __webpack_require__(348);
 
-	var _App = __webpack_require__(349);
+	var _NewApartement = __webpack_require__(349);
+
+	var _App = __webpack_require__(350);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _history = __webpack_require__(351);
+	var _history = __webpack_require__(352);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var routes = exports.routes = _react2.default.createElement(
 	  _reactRouter.Route,
 	  { component: _App2.default },
+	  _react2.default.createElement(_reactRouter.Route, { path: '/apartements/new', component: (0, _AuthenticatedComponent.requireAuthentication)(_NewApartement.NewApartement), onlyFor: 'WORKER' }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/apartements/:index', component: _SingleApartement.SingleApartement }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/worker/new', component: (0, _AuthenticatedComponent.requireAuthentication)(_RegisterContainer.RegisterContainer), onlyFor: 'ADMIN', register: 'WORKER' }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _LoginContainer.LoginContainer }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/logout', component: _LogoutContainer.LogoutContainer }),
-	  _react2.default.createElement(_reactRouter.Route, { path: '/register', component: _RegisterContainer.RegisterContainer, role: 'CLIENT' }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/register', component: _RegisterContainer.RegisterContainer, register: 'CLIENT' }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/profile', component: (0, _AuthenticatedComponent.requireAuthentication)(_Profile2.default) }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/', component: _FilterableApartementTable.ApartementsContainer })
 	);
@@ -41123,7 +41130,7 @@
 	    },
 	    checkAuth: function checkAuth() {
 	      if (!this.props.isAuthenticated) {
-	        this.props.checkToken("http://localhost:3030/check");
+	        this.props.checkToken("http://localhost:3030/check", this.props.route.onlyFor);
 	      }
 	    },
 	    render: function render() {
@@ -41242,7 +41249,7 @@
 	      alert('Passwords does not match.');
 	      return;
 	    }
-	    json.role = this.props.route.role;
+	    json.role = this.props.route.register;
 	    this.props.register('http://localhost:3030/api/persons', json);
 	  },
 	  fields: function fields() {
@@ -41440,7 +41447,44 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Navbar = __webpack_require__(350);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
+	  displayName: 'NewApartement',
+
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'p',
+	        null,
+	        'Ici on met le form pour nouvelle apartement.'
+	      )
+	    );
+	  }
+	});
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(326); if (makeExportsHot(module, __webpack_require__(139))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "NewApartement.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
+
+/***/ },
+/* 350 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(77), RootInstanceProvider = __webpack_require__(85), ReactMount = __webpack_require__(87), React = __webpack_require__(139); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(139);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Navbar = __webpack_require__(351);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -41461,7 +41505,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ },
-/* 350 */
+/* 351 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(77), RootInstanceProvider = __webpack_require__(85), ReactMount = __webpack_require__(87), React = __webpack_require__(139); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -41541,7 +41585,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ },
-/* 351 */
+/* 352 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41582,7 +41626,7 @@
 
 	exports.useBasename = _useBasename3['default'];
 
-	var _useBeforeUnload2 = __webpack_require__(352);
+	var _useBeforeUnload2 = __webpack_require__(353);
 
 	var _useBeforeUnload3 = _interopRequireDefault(_useBeforeUnload2);
 
@@ -41602,13 +41646,13 @@
 
 	// deprecated
 
-	var _enableBeforeUnload2 = __webpack_require__(353);
+	var _enableBeforeUnload2 = __webpack_require__(354);
 
 	var _enableBeforeUnload3 = _interopRequireDefault(_enableBeforeUnload2);
 
 	exports.enableBeforeUnload = _enableBeforeUnload3['default'];
 
-	var _enableQueries2 = __webpack_require__(354);
+	var _enableQueries2 = __webpack_require__(355);
 
 	var _enableQueries3 = _interopRequireDefault(_enableQueries2);
 
@@ -41617,7 +41661,7 @@
 	exports.createLocation = createLocation;
 
 /***/ },
-/* 352 */
+/* 353 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -41734,7 +41778,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
 
 /***/ },
-/* 353 */
+/* 354 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41747,7 +41791,7 @@
 
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 
-	var _useBeforeUnload = __webpack_require__(352);
+	var _useBeforeUnload = __webpack_require__(353);
 
 	var _useBeforeUnload2 = _interopRequireDefault(_useBeforeUnload);
 
@@ -41755,7 +41799,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 354 */
+/* 355 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

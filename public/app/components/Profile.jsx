@@ -7,7 +7,7 @@ export default React.createClass({
   render: function() {
     return (
       <div>
-        <p>Welcome {this.props.username}!</p>
+        <h1>Welcome {this.props.username}!</h1>
         {this.props.role === 'ADMIN' ? <Admin /> : null}
         {this.props.role === 'CLIENT' ? <Client /> : null}
         {this.props.role === 'WORKER' ? <Worker /> : null}

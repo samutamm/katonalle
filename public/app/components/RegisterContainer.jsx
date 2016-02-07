@@ -47,7 +47,7 @@ export const RegisterForm = React.createClass({
       alert('Passwords does not match.');
       return;
     }
-    json.role = this.props.route.role;
+    json.role = this.props.route.register;
     this.props.register('http://localhost:3030/api/persons', json);
   },
   fields: function() {
@@ -66,7 +66,7 @@ export const RegisterForm = React.createClass({
     });
     return (
       <div>
-        <h2>Register as a new {this.props.route.role}</h2>
+        <h2>Register as a new {this.props.route.register}</h2>
         <table>
           <tbody>{rows}</tbody>
         </table>

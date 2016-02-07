@@ -61,7 +61,10 @@ function sendAuthentication(url, username, password) {
   }
 }
 
-function sendToken(url, token) {
+function sendToken(url, token, role) {
+  if (role === undefined) {
+    role = "ALL";
+  }
   return dispatch => {
     dispatch(request());
     $.ajax({
@@ -70,13 +73,13 @@ function sendToken(url, token) {
       type: "GET",
       async: true,
       headers: {
-        "Authorization": "Basic " + token
+        "Authorization": "Basic " + token + " " + role
       },
-      complete: function(reponse) {
-        if (reponse.status === 200) {
+      complete: function(response) {
+        if (response.status === 200) {
           dispatch(tokenOK());
         } else {
-          dispatch(receiveError('Error: ' + response.status));
+          dispatch(receiveError('Please log in first!'));
           appHistory.push('/login');
         }
       }
@@ -94,11 +97,11 @@ export function authenticate(url, username, password) {
   }
 }
 
-export function checkToken(url) {
+export function checkToken(url, role) {
   return (dispatch, getState) => {
     let token = localStorage.getItem('token');
     if (canFetch(getState().loginReducer) && token !== undefined) {
-      return dispatch(sendToken(url, token))
+      return dispatch(sendToken(url, token, role))
     } else {
       return Promise.resolve()
     }

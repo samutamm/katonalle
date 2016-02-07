@@ -4,8 +4,7 @@ export default React.createClass({
   render: function() {
     return (
       <div>
-        <h3>Worker portal</h3>
-        <Link to="/apartements/new" >Register new apartement</Link>
+        <p>Ici on met le form pour nouvelle apartement.</p>
       </div>
     );
   }

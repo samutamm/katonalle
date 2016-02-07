@@ -12,7 +12,10 @@ export function requireAuthentication(Component) {
     },
     checkAuth: function() {
       if (!this.props.isAuthenticated) {
-        this.props.checkToken("http://localhost:3030/check");
+        this.props.checkToken(
+          "http://localhost:3030/check",
+          this.props.route.onlyFor
+        );
       }
     },
     render: function() {
