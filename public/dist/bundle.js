@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "1c5647e2d08f2f6fa1d4"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "9832402399b17a14d165"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -40399,6 +40399,8 @@
 
 	var _NewApartement = __webpack_require__(349);
 
+	var _NewApartement2 = _interopRequireDefault(_NewApartement);
+
 	var _App = __webpack_require__(350);
 
 	var _App2 = _interopRequireDefault(_App);
@@ -40410,7 +40412,7 @@
 	var routes = exports.routes = _react2.default.createElement(
 	  _reactRouter.Route,
 	  { component: _App2.default },
-	  _react2.default.createElement(_reactRouter.Route, { path: '/apartements/new', component: (0, _AuthenticatedComponent.requireAuthentication)(_NewApartement.NewApartement), onlyFor: 'WORKER' }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/apartements/new', component: (0, _AuthenticatedComponent.requireAuthentication)(_NewApartement2.default), onlyFor: 'WORKER' }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/apartements/:index', component: _SingleApartement.SingleApartement }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/worker/new', component: (0, _AuthenticatedComponent.requireAuthentication)(_RegisterContainer.RegisterContainer), onlyFor: 'ADMIN', register: 'WORKER' }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _LoginContainer.LoginContainer }),
@@ -40463,7 +40465,7 @@
 	      'div',
 	      null,
 	      _react2.default.createElement(
-	        'p',
+	        'h1',
 	        null,
 	        'Welcome ',
 	        this.props.username,
@@ -40495,6 +40497,8 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactRouter = __webpack_require__(243);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = _react2.default.createClass({
@@ -40505,9 +40509,14 @@
 	      'div',
 	      null,
 	      _react2.default.createElement(
-	        'p',
+	        'h3',
 	        null,
-	        'THIS IS FOR ADMIN'
+	        'Admin portal'
+	      ),
+	      _react2.default.createElement(
+	        _reactRouter.Link,
+	        { to: '/worker/new' },
+	        'Register new worker'
 	      )
 	    );
 	  }
@@ -40569,6 +40578,8 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactRouter = __webpack_require__(243);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = _react2.default.createClass({
@@ -40579,9 +40590,14 @@
 	      'div',
 	      null,
 	      _react2.default.createElement(
-	        'p',
+	        'h3',
 	        null,
-	        'THIS IS FOR WORKER'
+	        'Worker portal'
+	      ),
+	      _react2.default.createElement(
+	        _reactRouter.Link,
+	        { to: '/apartements/new' },
+	        'Register new apartement'
 	      )
 	    );
 	  }
@@ -41268,7 +41284,7 @@
 	        'h2',
 	        null,
 	        'Register as a new ',
-	        this.props.route.role
+	        this.props.route.register
 	      ),
 	      _react2.default.createElement(
 	        'table',

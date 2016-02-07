@@ -7,7 +7,7 @@ import {LogoutContainer} from './LogoutContainer';
 import {requireAuthentication} from './AuthenticatedComponent';
 import {RegisterContainer} from './RegisterContainer';
 import {SingleApartement} from './SingleApartement';
-import {NewApartement} from './profile/workerComponents/NewApartement';
+import NewApartement from './profile/workerComponents/NewApartement';
 import App from './App';
 import { browserHistory, useRouterHistory } from 'react-router'
 import { createHashHistory } from 'history';
