@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "9832402399b17a14d165"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "c27e3adc4fed6436ef81"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -41184,7 +41184,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.RegisterContainer = exports.RegisterForm = undefined;
+	exports.RegisterContainer = exports.RegisterForm = exports.FormField = undefined;
 
 	var _react = __webpack_require__(139);
 
@@ -41204,7 +41204,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var FormField = _react2.default.createClass({
+	var FormField = exports.FormField = _react2.default.createClass({
 	  displayName: 'FormField',
 
 	  fieldChanged: function fieldChanged(e) {
@@ -41463,19 +41463,56 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _RegisterContainer = __webpack_require__(346);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = _react2.default.createClass({
 	  displayName: 'NewApartement',
 
+	  register: function register(e) {
+	    e.preventDefault();
+	    var json = {
+	      name: this.refs.Name.getText(),
+	      address: this.refs.Address.getText(),
+	      city: this.refs.City.getText(),
+	      agent: this.refs.Agent.getText(),
+	      price: this.refs.Price.getText()
+	    };
+	    this.fields().forEach(function (field) {
+	      var name = field.name.toLowerCase();
+	      if (json[name] !== undefined && json[name].length < field.length) {
+	        alert('Field ' + field.name + ' has to be at least ' + field.length + ' long.');
+	        return;
+	      }
+	    });
+	    alert('Send: ' + json);
+	  },
+	  fields: function fields() {
+	    return [{ name: 'Name', length: 4 }, { name: 'Address', length: 4 }, { name: 'City', length: 3 }, { name: 'Agent', length: 0 }, { name: 'Price', length: 1 }];
+	  },
 	  render: function render() {
+	    var rows = [];
+	    this.fields().forEach(function (f) {
+	      rows.push(_react2.default.createElement(_RegisterContainer.FormField, { ref: f.name, field: f, key: f.name }));
+	    });
 	    return _react2.default.createElement(
 	      'div',
 	      null,
 	      _react2.default.createElement(
-	        'p',
+	        'table',
 	        null,
-	        'Ici on met le form pour nouvelle apartement.'
+	        _react2.default.createElement(
+	          'tbody',
+	          null,
+	          rows
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'button',
+	        { type: 'Submit',
+	          onClick: this.register },
+	        'Submit'
 	      )
 	    );
 	  }

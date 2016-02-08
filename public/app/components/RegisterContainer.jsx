@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import * as actionCreators from '../creators/register_actions';
 import ReactDOM from 'react-dom';
 
-const FormField = React.createClass({
+export const FormField = React.createClass({
   fieldChanged: function(e) {
     const chars = e.target.value.length;
     if(chars > 0 && chars < this.props.field.length) {
