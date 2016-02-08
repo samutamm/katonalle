@@ -1,7 +1,9 @@
 import React from 'react';
 import {FormField} from './../../RegisterContainer';
+import {connect} from 'react-redux';
+import * as actionCreators from './../../../creators/new_apartement_actions';
 
-export default React.createClass({
+export const PostApartement = React.createClass({
   register: function(e) {
     e.preventDefault();
     const json = {
@@ -9,7 +11,7 @@ export default React.createClass({
       address: this.refs.Address.getText(),
       city: this.refs.City.getText(),
       agent: this.refs.Agent.getText(),
-      price: this.refs.Price.getText()
+      price: parseInt(this.refs.Price.getText())
     };
     this.fields().forEach(function(field) {
       const name = field.name.toLowerCase();
@@ -18,7 +20,7 @@ export default React.createClass({
         return;
       }
     });
-    alert('Send: ' + json);
+    this.props.postApartement('http://localhost:3015/api/apartements', json);
   },
   fields: function() {
     return [{name:'Name', length: 4},
@@ -45,3 +47,14 @@ export default React.createClass({
     );
   }
 });
+
+function mapStateToProps(state) {
+  return {
+    isChecking: state.apartementReducer.getIn(['apartement', 'isChecking'])
+  };
+}
+
+export const PostApartementContainer = connect(
+  mapStateToProps,
+  actionCreators
+)(PostApartement);

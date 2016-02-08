@@ -15,8 +15,12 @@ function setFetchingTag(state) {
   return state.setIn(['apartements', 'isFetching'], true);
 }
 
+function endFetching(state) {
+  return state.setIn(['apartements', 'isFetching'], false);
+}
+
 function setApartements(state, items) {
-  const fetchingFinished = state.setIn(['apartements', 'isFetching'], false);
+  const fetchingFinished = endFetching(state);
   return fetchingFinished.setIn(['apartements', 'items'], items);
 }
 
@@ -38,6 +42,10 @@ export default function(state = initial(), action) {
     return setFilterText(state, action.text);
   case 'SET_FILTERPARAM':
     return setFilterParam(state, action.param);
+  case 'POST_APARTEMENT_SUCCESS':
+    return endFetching(state);
+  case 'POST_APARTEMENT_ERROR':
+    return endFetching(state);
   }
   return state;
 }

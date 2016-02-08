@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "c27e3adc4fed6436ef81"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "ae2455281511f6f496fe"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -34447,6 +34447,10 @@
 	      return setFilterText(state, action.text);
 	    case 'SET_FILTERPARAM':
 	      return setFilterParam(state, action.param);
+	    case 'POST_APARTEMENT_SUCCESS':
+	      return endFetching(state);
+	    case 'POST_APARTEMENT_ERROR':
+	      return endFetching(state);
 	  }
 	  return state;
 	};
@@ -34468,8 +34472,12 @@
 	  return state.setIn(['apartements', 'isFetching'], true);
 	}
 
+	function endFetching(state) {
+	  return state.setIn(['apartements', 'isFetching'], false);
+	}
+
 	function setApartements(state, items) {
-	  var fetchingFinished = state.setIn(['apartements', 'isFetching'], false);
+	  var fetchingFinished = endFetching(state);
 	  return fetchingFinished.setIn(['apartements', 'items'], items);
 	}
 
@@ -40397,22 +40405,20 @@
 
 	var _SingleApartement = __webpack_require__(348);
 
-	var _NewApartement = __webpack_require__(349);
+	var _PostApartement = __webpack_require__(349);
 
-	var _NewApartement2 = _interopRequireDefault(_NewApartement);
-
-	var _App = __webpack_require__(350);
+	var _App = __webpack_require__(351);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _history = __webpack_require__(352);
+	var _history = __webpack_require__(353);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var routes = exports.routes = _react2.default.createElement(
 	  _reactRouter.Route,
 	  { component: _App2.default },
-	  _react2.default.createElement(_reactRouter.Route, { path: '/apartements/new', component: (0, _AuthenticatedComponent.requireAuthentication)(_NewApartement2.default), onlyFor: 'WORKER' }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/apartements/new', component: (0, _AuthenticatedComponent.requireAuthentication)(_PostApartement.PostApartementContainer), onlyFor: 'WORKER' }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/apartements/:index', component: _SingleApartement.SingleApartement }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/worker/new', component: (0, _AuthenticatedComponent.requireAuthentication)(_RegisterContainer.RegisterContainer), onlyFor: 'ADMIN', register: 'WORKER' }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _LoginContainer.LoginContainer }),
@@ -41458,6 +41464,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.PostApartementContainer = exports.PostApartement = undefined;
 
 	var _react = __webpack_require__(139);
 
@@ -41465,10 +41472,18 @@
 
 	var _RegisterContainer = __webpack_require__(346);
 
+	var _reactRedux = __webpack_require__(315);
+
+	var _new_apartement_actions = __webpack_require__(350);
+
+	var actionCreators = _interopRequireWildcard(_new_apartement_actions);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	exports.default = _react2.default.createClass({
-	  displayName: 'NewApartement',
+	var PostApartement = exports.PostApartement = _react2.default.createClass({
+	  displayName: 'PostApartement',
 
 	  register: function register(e) {
 	    e.preventDefault();
@@ -41477,7 +41492,7 @@
 	      address: this.refs.Address.getText(),
 	      city: this.refs.City.getText(),
 	      agent: this.refs.Agent.getText(),
-	      price: this.refs.Price.getText()
+	      price: parseInt(this.refs.Price.getText())
 	    };
 	    this.fields().forEach(function (field) {
 	      var name = field.name.toLowerCase();
@@ -41486,7 +41501,7 @@
 	        return;
 	      }
 	    });
-	    alert('Send: ' + json);
+	    this.props.postApartement('http://localhost:3015/api/apartements', json);
 	  },
 	  fields: function fields() {
 	    return [{ name: 'Name', length: 4 }, { name: 'Address', length: 4 }, { name: 'City', length: 3 }, { name: 'Agent', length: 0 }, { name: 'Price', length: 1 }];
@@ -41518,11 +41533,101 @@
 	  }
 	});
 
-	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(326); if (makeExportsHot(module, __webpack_require__(139))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "NewApartement.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	function mapStateToProps(state) {
+	  return {
+	    isChecking: state.apartementReducer.getIn(['apartement', 'isChecking'])
+	  };
+	}
+
+	var PostApartementContainer = exports.PostApartementContainer = (0, _reactRedux.connect)(mapStateToProps, actionCreators)(PostApartement);
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(326); if (makeExportsHot(module, __webpack_require__(139))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "PostApartement.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ },
 /* 350 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(77), RootInstanceProvider = __webpack_require__(85), ReactMount = __webpack_require__(87), React = __webpack_require__(139); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.postApartement = postApartement;
+
+	var _immutable = __webpack_require__(325);
+
+	var _Router = __webpack_require__(335);
+
+	function requestPostApartement() {
+	  return {
+	    type: 'REQUEST_APARTEMENTS'
+	  };
+	}
+
+	function postApartementSuccess() {
+	  return {
+	    type: 'POST_APARTEMENT_SUCCESS',
+	    message: 'New apartement created.'
+	  };
+	}
+
+	function postApartementError(error) {
+	  return {
+	    type: 'POST_APARTEMENT_ERROR',
+	    error: error
+	  };
+	}
+
+	function shouldPostApartement(state) {
+	  var isChecking = state.getIn(['apartement', 'isChecking']);
+	  if (!isChecking) {
+	    return true;
+	  } else {
+	    return false;
+	  }
+	}
+
+	function sendApartement(url, body) {
+	  return function (dispatch) {
+	    dispatch(requestPostApartement());
+	    $.ajax({
+	      url: url,
+	      type: "POST",
+	      async: true,
+	      data: JSON.stringify(body),
+	      contentType: "application/json; charset=utf-8",
+	      dataType: "json",
+	      complete: function complete(reponse) {
+	        var statusCode = reponse.status;
+	        if (statusCode === 200) {
+	          dispatch(postApartementSuccess());
+	          _Router.appHistory.push('apartements/' + JSON.parse(reponse.responseText).id);
+	        } else {
+	          dispatch(postApartementError('Error: ' + response.body));
+	        }
+	      }
+	    });
+	  };
+	}
+
+	function postApartement(url, body) {
+	  return function (dispatch, getState) {
+	    if (shouldPostApartement(getState().apartementReducer)) {
+	      return dispatch(sendApartement(url, body));
+	    } else {
+	      return Promise.resolve();
+	    }
+	  };
+	}
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(326); if (makeExportsHot(module, __webpack_require__(139))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "new_apartement_actions.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
+
+/***/ },
+/* 351 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(77), RootInstanceProvider = __webpack_require__(85), ReactMount = __webpack_require__(87), React = __webpack_require__(139); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -41537,7 +41642,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Navbar = __webpack_require__(351);
+	var _Navbar = __webpack_require__(352);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -41558,7 +41663,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ },
-/* 351 */
+/* 352 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(77), RootInstanceProvider = __webpack_require__(85), ReactMount = __webpack_require__(87), React = __webpack_require__(139); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -41638,7 +41743,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ },
-/* 352 */
+/* 353 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41679,7 +41784,7 @@
 
 	exports.useBasename = _useBasename3['default'];
 
-	var _useBeforeUnload2 = __webpack_require__(353);
+	var _useBeforeUnload2 = __webpack_require__(354);
 
 	var _useBeforeUnload3 = _interopRequireDefault(_useBeforeUnload2);
 
@@ -41699,13 +41804,13 @@
 
 	// deprecated
 
-	var _enableBeforeUnload2 = __webpack_require__(354);
+	var _enableBeforeUnload2 = __webpack_require__(355);
 
 	var _enableBeforeUnload3 = _interopRequireDefault(_enableBeforeUnload2);
 
 	exports.enableBeforeUnload = _enableBeforeUnload3['default'];
 
-	var _enableQueries2 = __webpack_require__(355);
+	var _enableQueries2 = __webpack_require__(356);
 
 	var _enableQueries3 = _interopRequireDefault(_enableQueries2);
 
@@ -41714,7 +41819,7 @@
 	exports.createLocation = createLocation;
 
 /***/ },
-/* 353 */
+/* 354 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -41831,7 +41936,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
 
 /***/ },
-/* 354 */
+/* 355 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41844,7 +41949,7 @@
 
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 
-	var _useBeforeUnload = __webpack_require__(353);
+	var _useBeforeUnload = __webpack_require__(354);
 
 	var _useBeforeUnload2 = _interopRequireDefault(_useBeforeUnload);
 
@@ -41852,7 +41957,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 355 */
+/* 356 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
