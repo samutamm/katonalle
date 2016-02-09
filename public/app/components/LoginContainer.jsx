@@ -13,6 +13,7 @@ export const LoginForm = React.createClass({
     );
   },
   render: function() {
+    debugger;
     return (
       <div>
         <form>
