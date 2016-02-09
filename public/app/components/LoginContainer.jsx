@@ -7,13 +7,12 @@ export const LoginForm = React.createClass({
   handleLogin: function(e) {
     e.preventDefault();
     this.props.authenticate(
-      'http://localhost:3030/login',
+      this.props.configurations.endpoints.login,
       this.refs.username.value,
       this.refs.password.value
     );
   },
   render: function() {
-    debugger;
     return (
       <div>
         <form>

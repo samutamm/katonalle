@@ -17,12 +17,16 @@ export function requireConfigurations(Component) {
       }.bind(this));
     },
     render: function() {
-      return (
-        <div>
-          <Component {...this.props}
-                      configurations={this.state.configurations}/>
-        </div>
-      );
+      if (!this.state.configurations) {
+        return null;
+      } else {
+        return (
+          <div>
+            <Component {...this.props}
+                        configurations={this.state.configurations}/>
+          </div>
+        );
+      }
     }
   });
 

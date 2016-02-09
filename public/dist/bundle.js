@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "4c368bdec108041828e0"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "9105a84e84683af718da"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -33064,16 +33064,18 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	var configUrl = "http://localhost:3000/configurations";
+
 	var routes = exports.routes = _react2.default.createElement(
 	  _reactRouter.Route,
 	  { component: _App2.default },
-	  _react2.default.createElement(_reactRouter.Route, { path: '/apartements/new', component: (0, _AuthenticatedComponent.requireAuthentication)(_PostApartement.PostApartementContainer), onlyFor: 'WORKER' }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/apartements/new', component: (0, _AuthenticatedComponent.requireAuthentication)((0, _RequestingComponent.requireConfigurations)(_PostApartement.PostApartementContainer)), source: configUrl, onlyFor: 'WORKER' }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/apartements/:index', component: _SingleApartement.SingleApartement }),
-	  _react2.default.createElement(_reactRouter.Route, { path: '/worker/new', component: (0, _AuthenticatedComponent.requireAuthentication)(_RegisterContainer.RegisterContainer), onlyFor: 'ADMIN', register: 'WORKER' }),
-	  _react2.default.createElement(_reactRouter.Route, { path: '/login', component: (0, _RequestingComponent.requireConfigurations)(_LoginContainer.LoginContainer), source: 'http://localhost:3000/configurations' }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/worker/new', component: (0, _AuthenticatedComponent.requireAuthentication)((0, _RequestingComponent.requireConfigurations)(_RegisterContainer.RegisterContainer)), source: configUrl, onlyFor: 'ADMIN', register: 'WORKER' }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/login', component: (0, _RequestingComponent.requireConfigurations)(_LoginContainer.LoginContainer), source: configUrl }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/logout', component: _LogoutContainer.LogoutContainer }),
-	  _react2.default.createElement(_reactRouter.Route, { path: '/register', component: _RegisterContainer.RegisterContainer, register: 'CLIENT' }),
-	  _react2.default.createElement(_reactRouter.Route, { path: '/profile', component: (0, _AuthenticatedComponent.requireAuthentication)(_Profile2.default) }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/register', component: (0, _RequestingComponent.requireConfigurations)(_RegisterContainer.RegisterContainer), source: configUrl, register: 'CLIENT' }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/profile', component: (0, _AuthenticatedComponent.requireAuthentication)((0, _RequestingComponent.requireConfigurations)(_Profile2.default)), source: configUrl }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/', component: _FilterableApartementTable.ApartementsContainer })
 	);
 
@@ -33526,10 +33528,9 @@
 
 	  handleLogin: function handleLogin(e) {
 	    e.preventDefault();
-	    this.props.authenticate('http://localhost:3030/login', this.refs.username.value, this.refs.password.value);
+	    this.props.authenticate(this.props.configurations.endpoints.login, this.refs.username.value, this.refs.password.value);
 	  },
 	  render: function render() {
-	    debugger;
 	    return _react2.default.createElement(
 	      'div',
 	      null,
@@ -33802,7 +33803,7 @@
 	    },
 	    checkAuth: function checkAuth() {
 	      if (!this.props.isAuthenticated) {
-	        this.props.checkToken("http://localhost:3030/check", this.props.route.onlyFor);
+	        this.props.checkToken(this.props.configurations.endpoints.checkToken, this.props.route.onlyFor);
 	      }
 	    },
 	    render: function render() {
@@ -33875,12 +33876,16 @@
 	      }.bind(this));
 	    },
 	    render: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(Component, _extends({}, this.props, {
-	          configurations: this.state.configurations }))
-	      );
+	      if (!this.state.configurations) {
+	        return null;
+	      } else {
+	        return _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(Component, _extends({}, this.props, {
+	            configurations: this.state.configurations }))
+	        );
+	      }
 	    }
 	  });
 

@@ -13,14 +13,24 @@ import App from './App';
 import { browserHistory, useRouterHistory } from 'react-router'
 import { createHashHistory } from 'history';
 
+const configUrl = "http://localhost:3000/configurations";
+
 export const routes = <Route component={App}>
-  <Route path="/apartements/new" component={requireAuthentication(PostApartementContainer)} onlyFor="WORKER" />
+  <Route path="/apartements/new" component={
+    requireAuthentication(requireConfigurations(PostApartementContainer))
+  } source={configUrl} onlyFor="WORKER" />
   <Route path="/apartements/:index" component={SingleApartement} />
-  <Route path="/worker/new" component={requireAuthentication(RegisterContainer)} onlyFor="ADMIN" register="WORKER" />
-  <Route path="/login" component={requireConfigurations(LoginContainer)} source="http://localhost:3000/configurations" />
+  <Route path="/worker/new" component={
+      requireAuthentication(requireConfigurations(RegisterContainer))
+    } source={configUrl} onlyFor="ADMIN" register="WORKER" />
+  <Route path="/login" component={requireConfigurations(LoginContainer)} source={configUrl} />
   <Route path="/logout" component={LogoutContainer} />
-  <Route path="/register" component={RegisterContainer} register="CLIENT" />
-  <Route path="/profile" component={requireAuthentication(Profile)} />
+  <Route path="/register" component={
+      requireConfigurations(RegisterContainer)
+    } source={configUrl} register="CLIENT" />
+  <Route path="/profile" component={
+      requireAuthentication(requireConfigurations(Profile))
+    } source={configUrl} />
   <Route path="/" component={ApartementsContainer} />
 </Route>;
 
