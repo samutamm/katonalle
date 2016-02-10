@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "9105a84e84683af718da"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "94cff783e664ec65746f"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -601,14 +601,8 @@
 	loggerMiddleware // neat middleware that logs actions
 	)(_redux.createStore);
 	var store = createStoreWithMiddleware(_reducer2.default);
-	store.dispatch((0, _action_creators.fetchApartementsIfNeeded)('http://localhost:3015/api/apartements')).then(function () {
-	  return console.log(store.getState());
-	}).then(function () {
-	  var token = localStorage.getItem('token');
-	  if (token !== null && token.length > 12) {
-	    store.dispatch((0, _login_actions.receiveToken)({ token: token }));
-	  }
-	});
+	var token = localStorage.getItem('token');
+	store.dispatch((0, _login_actions.receiveToken)({ token: token }));
 
 	_reactDom2.default.render(_react2.default.createElement(
 	  _reactRedux.Provider,
@@ -33076,7 +33070,7 @@
 	  _react2.default.createElement(_reactRouter.Route, { path: '/logout', component: _LogoutContainer.LogoutContainer }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/register', component: (0, _RequestingComponent.requireConfigurations)(_RegisterContainer.RegisterContainer), source: configUrl, register: 'CLIENT' }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/profile', component: (0, _AuthenticatedComponent.requireAuthentication)((0, _RequestingComponent.requireConfigurations)(_Profile2.default)), source: configUrl }),
-	  _react2.default.createElement(_reactRouter.Route, { path: '/', component: _FilterableApartementTable.ApartementsContainer })
+	  _react2.default.createElement(_reactRouter.Route, { path: '/', component: (0, _RequestingComponent.requireConfigurations)(_FilterableApartementTable.ApartementsContainer), source: configUrl })
 	);
 
 	var appHistory = exports.appHistory = (0, _reactRouter.useRouterHistory)(_history.createHashHistory)({ queryKey: false });
@@ -33377,6 +33371,9 @@
 	var FilterableApartementTable = exports.FilterableApartementTable = _react2.default.createClass({
 	  displayName: 'FilterableApartementTable',
 
+	  componentDidMount: function componentDidMount() {
+	    this.props.fetchApartementsIfNeeded(this.props.configurations.endpoints.apartements);
+	  },
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
@@ -33876,7 +33873,7 @@
 	      }.bind(this));
 	    },
 	    render: function render() {
-	      if (!this.state.configurations) {
+	      if (!this.state.configurations || this.state.configurations.endpoints === undefined) {
 	        return null;
 	      } else {
 	        return _react2.default.createElement(

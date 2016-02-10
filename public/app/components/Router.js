@@ -31,7 +31,9 @@ export const routes = <Route component={App}>
   <Route path="/profile" component={
       requireAuthentication(requireConfigurations(Profile))
     } source={configUrl} />
-  <Route path="/" component={ApartementsContainer} />
+  <Route path="/" component={
+      requireConfigurations(ApartementsContainer)
+    } source={configUrl} />
 </Route>;
 
 export const appHistory = useRouterHistory(createHashHistory)({ queryKey: false });

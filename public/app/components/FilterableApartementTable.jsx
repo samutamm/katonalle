@@ -48,6 +48,11 @@ var ApartementTable = React.createClass({
 });
 
 export const FilterableApartementTable = React.createClass({
+  componentDidMount: function() {
+    this.props.fetchApartementsIfNeeded(
+      this.props.configurations.endpoints.apartements
+    );
+  },
   render: function() {
     return (
       <div>

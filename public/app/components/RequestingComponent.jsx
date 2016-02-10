@@ -17,7 +17,7 @@ export function requireConfigurations(Component) {
       }.bind(this));
     },
     render: function() {
-      if (!this.state.configurations) {
+      if (!this.state.configurations || this.state.configurations.endpoints === undefined) {
         return null;
       } else {
         return (

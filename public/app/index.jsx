@@ -17,16 +17,8 @@ const createStoreWithMiddleware = applyMiddleware(
   loggerMiddleware // neat middleware that logs actions
 )(createStore);
 const store = createStoreWithMiddleware(reducer);
-store.dispatch(fetchApartementsIfNeeded('http://localhost:3015/api/apartements')).then(
-  () => console.log(store.getState())
-).then(
-  () => {
-    let token = localStorage.getItem('token');
-    if (token !== null && token.length > 12) {
-        store.dispatch(receiveToken({token: token }));
-    }
-  }
-);
+let token = localStorage.getItem('token');
+store.dispatch(receiveToken({token: token }));
 
 ReactDOM.render(
   <Provider store={store}>
