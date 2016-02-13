@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "94cff783e664ec65746f"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "b4161ff781a8223bb421"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -33058,7 +33058,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var configUrl = "http://localhost:3000/configurations";
+	var configUrl = window.location.origin + "/configurations";
 
 	var routes = exports.routes = _react2.default.createElement(
 	  _reactRouter.Route,

@@ -13,7 +13,7 @@ import App from './App';
 import { browserHistory, useRouterHistory } from 'react-router'
 import { createHashHistory } from 'history';
 
-const configUrl = "http://localhost:3000/configurations";
+const configUrl = window.location.origin + "/configurations";
 
 export const routes = <Route component={App}>
   <Route path="/apartements/new" component={
