@@ -14,3 +14,13 @@ Laita tähän aihekuvaus tai [linkki valmiiseen aiheeseen](http://advancedkitten
 -[PersonApi](https://github.com/samutamm/PersonApi)
 
 ## Käyttöohje
+
+Lokaalisti:
+- Kloonaa tämä ja kaksi aiemmin mainittua repositoria.
+- Aja jokaisen juuressa komento 'node server'
+- Mene selaimella osoitteeseen localhost:3000.
+- adminin käyttäjätunnus on admin, salasana passu
+
+katonalle.herokuapp.com/
+- Apit deployatty herokun ilmasille instansseille, joten käynnistyvät hissukseen
+- admin passu: person-passu
