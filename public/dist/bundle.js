@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "b4161ff781a8223bb421"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "ef402468dd7e36d66860"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -33989,7 +33989,8 @@
 	      return;
 	    }
 	    json.role = this.props.route.register;
-	    this.props.register('http://localhost:3030/api/persons', json);
+	    var url = this.props.configurations.endpoints.persons;
+	    this.props.register(url, json);
 	  },
 	  fields: function fields() {
 	    return [{ name: 'Name', length: 3 }, { name: 'Email', length: 4 }, { name: 'Address', length: 3 }, { name: 'Username', length: 3 }, { name: 'Password', length: 8 }, { name: 'Password_again', length: 8 }];
