@@ -1,6 +1,7 @@
 {
 	"endpoints": {
 		"apartements": "https://apartement-api.herokuapp.com/api/apartements",
+		"persons": "https://person-api.herokuapp.com/api/persons",
 		"login": "https://person-api.herokuapp.com/login",
 		"checkToken": "https://person-api.herokuapp.com/check"
 	}

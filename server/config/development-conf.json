@@ -1,6 +1,7 @@
 {
 	"endpoints": {
 		"apartements": "http://localhost:3015/api/apartements",
+		"persons": "http://localhost:3030/api/persons",
 		"login": "http://localhost:3030/login",
 		"checkToken": "http://localhost:3030/check"
 	}

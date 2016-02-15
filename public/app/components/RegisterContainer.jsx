@@ -48,7 +48,8 @@ export const RegisterForm = React.createClass({
       return;
     }
     json.role = this.props.route.register;
-    this.props.register('http://localhost:3030/api/persons', json);
+    const url = this.props.configurations.endpoints.persons;
+    this.props.register(url, json);
   },
   fields: function() {
     return [{name:'Name', length: 3},

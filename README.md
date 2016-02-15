@@ -12,3 +12,5 @@ Laita tähän aihekuvaus tai [linkki valmiiseen aiheeseen](http://advancedkitten
 ## Projektiin liittyvät repositoriot
 -[ApartementApi](https://github.com/samutamm/ApartementApi)
 -[PersonApi](https://github.com/samutamm/PersonApi)
+
+## Käyttöohje
